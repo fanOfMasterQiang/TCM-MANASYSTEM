@@ -34,11 +34,6 @@ export default [
             name: 'monitor',
             component: './Dashboard/Monitor',
           },
-          {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
-          },
         ],
       },
       // forms

@@ -14,11 +14,13 @@ export default {
     *fetchCurrent({payload}, { call, put }) {
       const avatar =require("../assets/logo.svg");
       const response = yield call(queryNumber,payload);
-      response.Data.avatar = avatar;
-      yield put({
-        type: 'saveCurrentUser',
-        payload: response.Data,
-      });
+      if(response.Data!== null || !Array.isArray(response.Data)){
+        response.Data.avatar = avatar;
+        yield put({
+          type: 'saveCurrentUser',
+          payload: response.Data,
+        });
+      }
     },
     *changeBaseInfo({payload, callback}, { call, put }) {
       const response = yield call(changeNumber,payload);
