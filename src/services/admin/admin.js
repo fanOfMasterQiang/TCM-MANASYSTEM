@@ -5,7 +5,7 @@ import request from '@/utils/request';
 // 新增问卷
 
 export async function queryNumber(params) {
-  return request(`/api/admin/query?${stringify(params)}`,{
+  return request(`/api/admin/query?${stringify(params)}&date=${new Date()}`,{
       expirys:false
     });
 }

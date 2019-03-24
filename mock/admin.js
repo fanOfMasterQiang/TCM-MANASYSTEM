@@ -35,12 +35,16 @@ function query(req, res, u) {
     result.Data =adminSource
   } else {
     adminSource.map(item => {
-      if(item.Name === params.Name && item.Password === params.Password){
+      if(item.Id === params.Id){
         result.Data = item;
       }
     });
   }
-  result.Success =true
+  if(!result.Data){
+    result.Message = "Id错误"
+  } else {
+    result.Success =true
+  }
   return res.json(result);
 }
 
@@ -67,7 +71,6 @@ function login(req, res, u, b) {
       result.Data = item;
     }
   });
-
   if(!result.Data){
     result.Message = "姓名或密码错误"
   } else{

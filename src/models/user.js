@@ -14,11 +14,15 @@ export default {
     *fetchCurrent({payload}, { call, put }) {
       const avatar =require("../assets/logo.svg");
       const response = yield call(queryNumber,payload);
-      if(response.Data!== null || !Array.isArray(response.Data)){
+      if(response.Data!== null && !Array.isArray(response.Data)){
         response.Data.avatar = avatar;
         yield put({
           type: 'saveCurrentUser',
           payload: response.Data,
+        });
+      } else {
+        yield put({
+          type: 'login/logout',
         });
       }
     },
@@ -49,7 +53,6 @@ export default {
   reducers: {
     // basicLayout
     saveCurrentUser(state, action) {
-      console.log("action",action)
       localStorage.setItem("userId",action.payload.Id);
       return {
         ...state,
