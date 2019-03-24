@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
+import { message } from 'antd';
+import { login } from '@/services/admin/admin';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -14,13 +15,16 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      const response = yield call(login, payload);
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: {
+          status: 'ok',
+          currentAuthority: 'admin',
+        },
       });
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.Success) {
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -37,14 +41,12 @@ export default {
             return;
           }
         }
-        yield put(routerRedux.replace(redirect || '/'));
+        yield put({type: 'user/saveCurrentUser', payload: response.Data});
+        yield put(routerRedux.replace(redirect || '/dashboard/analysis'));
+      }else {
+        message.error(response.Message)
       }
     },
-
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
-    },
-
     *logout(_, { put }) {
       yield put({
         type: 'changeLoginStatus',
@@ -55,7 +57,7 @@ export default {
       });
       reloadAuthorized();
       yield put(
-        routerRedux.replace({
+        routerRedux.push({
           pathname: '/user/login',
           search: stringify({
             redirect: window.location.href,
