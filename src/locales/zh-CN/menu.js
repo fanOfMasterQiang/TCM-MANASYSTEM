@@ -6,6 +6,8 @@ export default {
 
   'menu.users': '用户',
   'menu.users.users-mana': '用户管理',
+  'menu.users.userInfo': '用户信息',
+
   'menu.diagnosis': '自诊',
   'menu.diagnosis.syndrome': '证型管理',
   'menu.diagnosis.symptom': '症状管理',

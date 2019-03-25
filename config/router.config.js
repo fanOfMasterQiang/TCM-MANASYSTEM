@@ -79,6 +79,8 @@ export default [
           },
         ],
       },
+
+
       // list
       {
         path: '/list',
@@ -104,6 +106,7 @@ export default [
             path: '/list/search',
             name: 'searchlist',
             component: './List/List',
+            hideInMenu: true,
             routes: [
               {
                 path: '/list/search',
@@ -157,6 +160,7 @@ export default [
         name: 'result',
         icon: 'check-circle-o',
         path: '/result',
+        hideInMenu: true,
         routes: [
           // result
           {
@@ -171,6 +175,7 @@ export default [
         name: 'exception',
         icon: 'warning',
         path: '/exception',
+        hideInMenu: true,
         routes: [
           // exception
           {
@@ -196,6 +201,32 @@ export default [
           },
         ],
       },
+      //  editor
+      {
+        name: 'editor',
+        icon: 'highlight',
+        path: '/editor',
+        hideInMenu: true,
+        routes: [
+          {
+            path: '/editor/flow',
+            name: 'flow',
+            component: './Editor/GGEditor/Flow',
+          },
+          {
+            path: '/editor/mind',
+            name: 'mind',
+            component: './Editor/GGEditor/Mind',
+          },
+          {
+            path: '/editor/koni',
+            name: 'koni',
+            component: './Editor/GGEditor/Koni',
+          },
+        ],
+      },
+
+
       {
         name: 'account',
         icon: 'user',
@@ -236,7 +267,13 @@ export default [
             path: '/users/page-list',
             name: 'users-mana',
             component: './Users/pageList',
-          }]
+          },
+          {
+            path: '/users/info',
+            name: 'userInfo',
+            component: './Users/userInfo',
+          },
+        ]
       },
       // diagnosis
       {
@@ -255,29 +292,6 @@ export default [
             component: './Diagnosis/symptom',
           }
         ]
-      },
-      //  editor
-      {
-        name: 'editor',
-        icon: 'highlight',
-        path: '/editor',
-        routes: [
-          {
-            path: '/editor/flow',
-            name: 'flow',
-            component: './Editor/GGEditor/Flow',
-          },
-          {
-            path: '/editor/mind',
-            name: 'mind',
-            component: './Editor/GGEditor/Mind',
-          },
-          {
-            path: '/editor/koni',
-            name: 'koni',
-            component: './Editor/GGEditor/Koni',
-          },
-        ],
       },
       {
         component: '404',

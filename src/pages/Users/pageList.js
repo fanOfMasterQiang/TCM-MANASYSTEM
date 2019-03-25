@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import router from 'umi/router';
 
 import styles from './pageList.less';
 
@@ -360,6 +361,8 @@ class pageList extends PureComponent {
       title: '姓名',
       dataIndex: 'Name',
       width: '20%',
+      render:(text,record)=>
+        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>text</a>
     },
     {
       title: '性别',
