@@ -86,11 +86,6 @@ export default [
         name: 'list',
         routes: [
           {
-            path: '/list/page-list',
-            name: 'pageList',
-            component: './Ex/pageList',
-          },
-          {
             path: '/list/table-list',
             name: 'searchtable',
             component: './List/TableList',
@@ -230,6 +225,36 @@ export default [
             ],
           },
         ],
+      },
+      // users
+      {
+        path: '/users',
+        icon: 'table',
+        name: 'users',
+        routes: [
+          {
+            path: '/users/page-list',
+            name: 'users-mana',
+            component: './Users/pageList',
+          }]
+      },
+      // diagnosis
+      {
+        path: '/diagnosis',
+        icon: 'table',
+        name: 'diagnosis',
+        routes: [
+          {
+            path: '/diagnosis/syndrome',
+            name: 'syndrome',
+            component: './Diagnosis/syndrome',
+          },
+          {
+            path: '/diagnosis/symptom',
+            name: 'symptom',
+            component: './Diagnosis/symptom',
+          }
+        ]
       },
       //  editor
       {
