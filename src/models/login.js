@@ -20,7 +20,7 @@ export default {
         type: 'changeLoginStatus',
         payload: {
           status: 'ok',
-          currentAuthority: 'admin',
+          currentAuthority: response.Data.Authority,
         },
       });
       // Login successfully

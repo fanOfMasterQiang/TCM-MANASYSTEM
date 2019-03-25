@@ -3,7 +3,7 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 
 export async function queryNumber(params) {
-  return request(`/api/admin/query?${stringify(params)}&date=${new Date()}`,{
+  return request(`/api/admin/query?${stringify(params)}`,{
       expirys:false
     });
 }

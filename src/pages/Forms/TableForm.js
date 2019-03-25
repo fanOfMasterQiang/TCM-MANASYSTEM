@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Button, Input, message, Popconfirm, Divider } from 'antd';
+import { Table, Button, Input, message, Popconfirm, Divider,Select } from 'antd';
 import isEqual from 'lodash/isEqual';
 import styles from './style.less';
 
@@ -31,7 +31,7 @@ class TableForm extends PureComponent {
 
   getRowByKey(key, newData) {
     const { data } = this.state;
-    return (newData || data).filter(item => item.key === key)[0];
+    return (newData || data).filter(item => item.Id === key)[0];
   }
 
   toggleEditable = (e, key) => {
@@ -53,10 +53,10 @@ class TableForm extends PureComponent {
     const { data } = this.state;
     const newData = data.map(item => ({ ...item }));
     newData.push({
-      key: `NEW_TEMP_ID_${this.index}`,
-      workId: '',
-      name: '',
-      department: '',
+      Id: `NEW_TEMP_ID_${this.index}`,
+      Name: '',
+      Password: '',
+      Authority: 'number',
       editable: true,
       isNew: true,
     });
@@ -65,11 +65,16 @@ class TableForm extends PureComponent {
   };
 
   remove(key) {
-    const { data } = this.state;
-    const { onChange } = this.props;
-    const newData = data.filter(item => item.key !== key);
-    this.setState({ data: newData });
-    onChange(newData);
+    const {dispatch} =this.props;
+    dispatch({
+      type:'advanced/delNumbers',
+      payload:{Id:key},
+      callback:()=>{
+        dispatch({
+          type: 'advanced/queryNumbers'
+        })
+      }
+    });
   }
 
   handleKeyPress(e, key) {
@@ -89,6 +94,7 @@ class TableForm extends PureComponent {
   }
 
   saveRow(e, key) {
+    const {dispatch} =this.props;
     e.persist();
     this.setState({
       loading: true,
@@ -99,7 +105,7 @@ class TableForm extends PureComponent {
         return;
       }
       const target = this.getRowByKey(key) || {};
-      if (!target.workId || !target.name || !target.department) {
+      if (!target.Name || target.Password.length<6) {
         message.error('请填写完整成员信息。');
         e.target.focus();
         this.setState({
@@ -107,11 +113,15 @@ class TableForm extends PureComponent {
         });
         return;
       }
-      delete target.isNew;
-      this.toggleEditable(e, key);
-      const { data } = this.state;
-      const { onChange } = this.props;
-      onChange(data);
+      dispatch({
+        type: target.isNew?'advanced/addNumbers':'advanced/changeNumbers',
+        payload:target,
+        callback:()=>{
+          dispatch({
+            type: 'advanced/queryNumbers'
+          })
+        }
+      });
       this.setState({
         loading: false,
       });
@@ -137,8 +147,8 @@ class TableForm extends PureComponent {
     const columns = [
       {
         title: '成员姓名',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'Name',
+        key: 'Name',
         width: '20%',
         render: (text, record) => {
           if (record.editable) {
@@ -146,8 +156,8 @@ class TableForm extends PureComponent {
               <Input
                 value={text}
                 autoFocus
-                onChange={e => this.handleFieldChange(e, 'name', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
+                onChange={e => this.handleFieldChange(e, 'Name', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
                 placeholder="成员姓名"
               />
             );
@@ -156,38 +166,37 @@ class TableForm extends PureComponent {
         },
       },
       {
-        title: '工号',
-        dataIndex: 'workId',
-        key: 'workId',
+        title: '密码',
+        dataIndex: 'Password',
+        key: 'Password',
         width: '20%',
         render: (text, record) => {
-          if (record.editable) {
+
             return (
-              <Input
+              <Input.Password
                 value={text}
-                onChange={e => this.handleFieldChange(e, 'workId', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="工号"
+                onChange={e => this.handleFieldChange(e, 'Password', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
+                placeholder="密码"
+                disabled={!record.editable}
               />
             );
-          }
-          return text;
+
         },
       },
       {
-        title: '所属部门',
-        dataIndex: 'department',
-        key: 'department',
+        align:'center',
+        title: '权限',
+        dataIndex: 'Authority',
+        key: 'Authority',
         width: '40%',
         render: (text, record) => {
           if (record.editable) {
             return (
-              <Input
-                value={text}
-                onChange={e => this.handleFieldChange(e, 'department', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="所属部门"
-              />
+              <Select labelInValue defaultValue={{ key: 'number' }} onChange={(e)=>this.handleFieldChange(e, 'Authority', record.Id)}>
+                <Select.Option value="number">number</Select.Option>
+                <Select.Option value="admin">admin</Select.Option>
+              </Select>
             );
           }
           return text;
@@ -205,9 +214,9 @@ class TableForm extends PureComponent {
             if (record.isNew) {
               return (
                 <span>
-                  <a onClick={e => this.saveRow(e, record.key)}>添加</a>
+                  <a onClick={e => this.saveRow(e, record.Id)}>添加</a>
                   <Divider type="vertical" />
-                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
                     <a>删除</a>
                   </Popconfirm>
                 </span>
@@ -215,17 +224,17 @@ class TableForm extends PureComponent {
             }
             return (
               <span>
-                <a onClick={e => this.saveRow(e, record.key)}>保存</a>
+                <a onClick={e => this.saveRow(e, record.Id)}>保存</a>
                 <Divider type="vertical" />
-                <a onClick={e => this.cancel(e, record.key)}>取消</a>
+                <a onClick={e => this.cancel(e, record.Id)}>取消</a>
               </span>
             );
           }
           return (
             <span>
-              <a onClick={e => this.toggleEditable(e, record.key)}>编辑</a>
+              <a onClick={e => this.toggleEditable(e, record.Id)}>编辑</a>
               <Divider type="vertical" />
-              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
                 <a>删除</a>
               </Popconfirm>
             </span>
