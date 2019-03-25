@@ -29,11 +29,6 @@ export default [
             name: 'analysis',
             component: './Dashboard/Analysis',
           },
-          {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
-          },
         ],
       },
       // forms
@@ -46,12 +41,14 @@ export default [
             path: '/form/basic-form',
             name: 'basicform',
             component: './Forms/BasicForm',
+            hideInMenu: true,
           },
           {
             path: '/form/step-form',
             name: 'stepform',
             component: './Forms/StepForm',
-            hideChildrenInMenu: true,
+            // hideChildrenInMenu: true,
+            hideInMenu: true,
             routes: [
               {
                 path: '/form/step-form',
