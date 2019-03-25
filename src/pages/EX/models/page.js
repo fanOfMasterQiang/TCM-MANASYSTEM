@@ -1,4 +1,4 @@
-import { queryDisease, addDisease, removeDisease, updateDisease} from '@/services/coustomApi/diseaseApi';
+import { queryKey, addUser, changeUser, delUser} from '@/services/users/users';
 
 export default {
   namespace: 'page',
@@ -10,23 +10,21 @@ export default {
     pageSize:10,
     formValues: {},
 
-    relateData:[],
-    restData:[],
     modalVisible: false,
     relateModalVisible: false,
     selectedRows: [],
-    Disease : {
+    Item : {
       Id: "",
       Name: "",
-      PinYin:"",
-      Prevalent:false,
+      Gender:0,
+      Age:0,
     },
 
   },
 
   effects: {
-    *queryDisease({ payload }, { call, put }) {
-      const response = yield call(queryDisease, payload);
+    *queryData({ payload }, { call, put }) {
+      const response = yield call(queryKey, payload);
       if(response.Success){
         yield put({
           type: 'set',
@@ -37,16 +35,16 @@ export default {
         });
       }
     },
-    *addDisease({ payload, callback }, { call }) {
-      yield call(addDisease, payload);
+    *addData({ payload, callback }, { call }) {
+      yield call(addUser, payload);
       if (callback) callback();
     },
-    *removeDisease({ payload, callback }, { call }) {
-      yield call(removeDisease, payload);
+    *removeData({ payload, callback }, { call }) {
+      yield call(delUser, payload);
       if (callback) callback();
     },
-    *updateDisease({ payload, callback }, { call }) {
-      yield call(updateDisease, payload);
+    *updateData({ payload, callback }, { call }) {
+      yield call(changeUser, payload);
       if (callback) callback();
     },
     *setStates({ payload, callback }, { put }) {

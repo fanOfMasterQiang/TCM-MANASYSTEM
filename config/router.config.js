@@ -89,6 +89,11 @@ export default [
         name: 'list',
         routes: [
           {
+            path: '/list/page-list',
+            name: 'pageList',
+            component: './Ex/pageList',
+          },
+          {
             path: '/list/table-list',
             name: 'searchtable',
             component: './List/TableList',
