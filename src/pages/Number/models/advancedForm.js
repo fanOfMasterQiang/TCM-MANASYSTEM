@@ -1,37 +1,37 @@
-import { queryNumber,changeNumber,delNumber,addNumber } from '@/services/admin/admin';
+import { queryNumber, changeNumber, delNumber, addNumber } from '@/services/admin/admin';
 
 export default {
   namespace: 'advanced',
 
   state: {
-    numberData:[]
+    numberData: [],
   },
 
   effects: {
-    *queryNumbers({ payload }, { call,put }) {
+    *queryNumbers({ payload }, { call, put }) {
       const response = yield call(queryNumber, payload);
       yield put({
         type: 'saveNumber',
-        payload:response.Data
+        payload: response.Data,
       });
     },
-    *changeNumbers({ payload,callback }, { call,put }) {
+    *changeNumbers({ payload, callback }, { call, put }) {
       const response = yield call(changeNumber, payload);
-      if(callback) callback();
+      if (callback) callback();
     },
-    *delNumbers({ payload,callback }, { call,put }) {
+    *delNumbers({ payload, callback }, { call, put }) {
       const response = yield call(delNumber, payload);
-      if(callback) callback();
+      if (callback) callback();
     },
-    *addNumbers({ payload,callback }, { call,put }) {
+    *addNumbers({ payload, callback }, { call, put }) {
       const response = yield call(addNumber, payload);
-      if(callback) callback();
+      if (callback) callback();
     },
   },
 
   reducers: {
     saveNumber(state, { payload }) {
-      let newData=[];
+      let newData = [];
       newData = payload.filter(item => item.Authority !== 'admin');
       return {
         ...state,

@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Button, Input, message, Popconfirm, Divider,Select } from 'antd';
+import { Table, Button, Input, message, Popconfirm, Divider, Select } from 'antd';
 import isEqual from 'lodash/isEqual';
 import styles from './style.less';
 
@@ -65,16 +65,24 @@ class TableForm extends PureComponent {
   };
 
   remove(key) {
-    const {dispatch} =this.props;
-    dispatch({
-      type:'advanced/delNumbers',
-      payload:{Id:key},
-      callback:()=>{
-        dispatch({
-          type: 'advanced/queryNumbers'
-        })
-      }
-    });
+    const { dispatch } = this.props;
+    const { data } = this.state;
+    const target = this.getRowByKey(key) || {};
+    if (target.isNew) {
+      const newData = data.map(item => ({ ...item }));
+      newData.pop();
+      this.setState({ data: newData });
+    } else {
+      dispatch({
+        type: 'advanced/delNumbers',
+        payload: { Id: key },
+        callback: () => {
+          dispatch({
+            type: 'advanced/queryNumbers',
+          });
+        },
+      });
+    }
   }
 
   handleKeyPress(e, key) {
@@ -94,7 +102,7 @@ class TableForm extends PureComponent {
   }
 
   saveRow(e, key) {
-    const {dispatch} =this.props;
+    const { dispatch } = this.props;
     e.persist();
     this.setState({
       loading: true,
@@ -105,7 +113,7 @@ class TableForm extends PureComponent {
         return;
       }
       const target = this.getRowByKey(key) || {};
-      if (!target.Name || target.Password.length<6) {
+      if (!target.Name || target.Password.length < 6) {
         message.error('请填写完整成员信息。');
         e.target.focus();
         this.setState({
@@ -114,13 +122,13 @@ class TableForm extends PureComponent {
         return;
       }
       dispatch({
-        type: target.isNew?'advanced/addNumbers':'advanced/changeNumbers',
-        payload:target,
-        callback:()=>{
+        type: target.isNew ? 'advanced/addNumbers' : 'advanced/changeNumbers',
+        payload: target,
+        callback: () => {
           dispatch({
-            type: 'advanced/queryNumbers'
-          })
-        }
+            type: 'advanced/queryNumbers',
+          });
+        },
       });
       this.setState({
         loading: false,
@@ -171,21 +179,19 @@ class TableForm extends PureComponent {
         key: 'Password',
         width: '20%',
         render: (text, record) => {
-
-            return (
-              <Input.Password
-                value={text}
-                onChange={e => this.handleFieldChange(e, 'Password', record.Id)}
-                onKeyPress={e => this.handleKeyPress(e, record.Id)}
-                placeholder="密码"
-                disabled={!record.editable}
-              />
-            );
-
+          return (
+            <Input.Password
+              value={text}
+              onChange={e => this.handleFieldChange(e, 'Password', record.Id)}
+              onKeyPress={e => this.handleKeyPress(e, record.Id)}
+              placeholder="密码"
+              disabled={!record.editable}
+            />
+          );
         },
       },
       {
-        align:'center',
+        align: 'center',
         title: '权限',
         dataIndex: 'Authority',
         key: 'Authority',
@@ -193,7 +199,11 @@ class TableForm extends PureComponent {
         render: (text, record) => {
           if (record.editable) {
             return (
-              <Select labelInValue defaultValue={{ key: 'number' }} onChange={(e)=>this.handleFieldChange(e, 'Authority', record.Id)}>
+              <Select
+                labelInValue
+                defaultValue={{ key: 'number' }}
+                onChange={e => this.handleFieldChange(e, 'Authority', record.Id)}
+              >
                 <Select.Option value="number">number</Select.Option>
                 <Select.Option value="admin">admin</Select.Option>
               </Select>
@@ -216,9 +226,7 @@ class TableForm extends PureComponent {
                 <span>
                   <a onClick={e => this.saveRow(e, record.Id)}>添加</a>
                   <Divider type="vertical" />
-                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
-                    <a>删除</a>
-                  </Popconfirm>
+                  <a onClick={() => this.remove(record.Id)}>取消</a>
                 </span>
               );
             }
