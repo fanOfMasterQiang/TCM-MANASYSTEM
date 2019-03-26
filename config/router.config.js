@@ -31,131 +31,8 @@ export default [
           },
         ],
       },
-      // forms
-      {
-        path: '/form',
-        icon: 'form',
-        name: 'form',
-        routes: [
-          {
-            path: '/form/basic-form',
-            name: 'basicform',
-            component: './Forms/BasicForm',
-            hideInMenu: true,
-          },
-          {
-            path: '/form/step-form',
-            name: 'stepform',
-            component: './Forms/StepForm',
-            // hideChildrenInMenu: true,
-            hideInMenu: true,
-            routes: [
-              {
-                path: '/form/step-form',
-                redirect: '/form/step-form/info',
-              },
-              {
-                path: '/form/step-form/info',
-                name: 'info',
-                component: './Forms/StepForm/Step1',
-              },
-              {
-                path: '/form/step-form/confirm',
-                name: 'confirm',
-                component: './Forms/StepForm/Step2',
-              },
-              {
-                path: '/form/step-form/result',
-                name: 'result',
-                component: './Forms/StepForm/Step3',
-              },
-            ],
-          },
-          {
-            path: '/form/advanced-form',
-            name: 'advancedform',
-            authority: ['admin'],
-            component: './Forms/AdvancedForm',
-          },
-        ],
-      },
 
-
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          },
-          {
-            path: '/list/basic-list',
-            name: 'basiclist',
-            component: './List/BasicList',
-          },
-          {
-            path: '/list/card-list',
-            name: 'cardlist',
-            component: './List/CardList',
-          },
-          {
-            path: '/list/search',
-            name: 'searchlist',
-            component: './List/List',
-            hideInMenu: true,
-            routes: [
-              {
-                path: '/list/search',
-                redirect: '/list/search/articles',
-              },
-              {
-                path: '/list/search/articles',
-                name: 'articles',
-                component: './List/Articles',
-              },
-              {
-                path: '/list/search/projects',
-                name: 'projects',
-                component: './List/Projects',
-              },
-              {
-                path: '/list/search/applications',
-                name: 'applications',
-                component: './List/Applications',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: '/profile',
-        name: 'profile',
-        icon: 'profile',
-        routes: [
-          // profile
-          {
-            path: '/profile/basic',
-            name: 'basic',
-            component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/basic/:id',
-            name: 'basic',
-            hideInMenu: true,
-            component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/advanced',
-            name: 'advanced',
-            authority: ['admin'],
-            component: './Profile/AdvancedProfile',
-          },
-        ],
-      },
+      // hide
       {
         name: 'result',
         icon: 'check-circle-o',
@@ -201,32 +78,22 @@ export default [
           },
         ],
       },
-      //  editor
+
+      // forms
       {
-        name: 'editor',
-        icon: 'highlight',
-        path: '/editor',
-        hideInMenu: true,
+        path: '/number',
+        icon: 'form',
+        name: 'number',
         routes: [
           {
-            path: '/editor/flow',
-            name: 'flow',
-            component: './Editor/GGEditor/Flow',
-          },
-          {
-            path: '/editor/mind',
-            name: 'mind',
-            component: './Editor/GGEditor/Mind',
-          },
-          {
-            path: '/editor/koni',
-            name: 'koni',
-            component: './Editor/GGEditor/Koni',
+            path: '/number/advanced-form',
+            name: 'advancedform',
+            authority: ['admin'],
+            component: './Number/AdvancedForm',
           },
         ],
       },
-
-
+      // account
       {
         name: 'account',
         icon: 'user',
@@ -249,10 +116,6 @@ export default [
                 path: '/account/settings/security',
                 component: './Account/Settings/SecurityView',
               },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
             ],
           },
         ],
@@ -273,7 +136,7 @@ export default [
             name: 'userInfo',
             component: './Users/userInfo',
           },
-        ]
+        ],
       },
       // diagnosis
       {
@@ -290,8 +153,26 @@ export default [
             path: '/diagnosis/symptom',
             name: 'symptom',
             component: './Diagnosis/symptom',
-          }
-        ]
+          },
+        ],
+      },
+      // nearby
+      {
+        path: '/nearby',
+        icon: 'form',
+        name: 'nearby',
+        routes: [
+          {
+            path: '/nearby/doctor',
+            name: 'doctor',
+            component: './NearBy/Doctor',
+          },
+          {
+            path: '/nearby/doctorInfo',
+            name: 'doctorInfo',
+            component: './NearBy/DoctorInfo',
+          },
+        ],
       },
       {
         component: '404',
