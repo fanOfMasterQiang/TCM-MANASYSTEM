@@ -12,6 +12,13 @@ export default {
   'menu.diagnosis.syndrome': '证型管理',
   'menu.diagnosis.symptom': '症状管理',
 
+  'menu.nearby': '附近',
+  'menu.nearby.doctor': '医生',
+  'menu.nearby.doctorInfo': '医生信息',
+
+  'menu.number': '成员',
+  'menu.number.advancedform': '成员管理',
+
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
   'menu.form.stepform': '分步表单',
