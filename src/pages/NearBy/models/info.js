@@ -1,4 +1,5 @@
 import { queryDoctor, addDoctor, changeDoctor } from '@/services/nearby/doctor';
+import { queryKey } from '@/services/diagnosis/syndrome';
 
 export default {
   namespace: 'doctorInfo',
@@ -15,7 +16,6 @@ export default {
       Lon: 0.0,
       GoodAt: [],
     },
-    GoodTmp: [],
     searchData: [],
   },
 
@@ -27,6 +27,17 @@ export default {
           type: 'set',
           payload: {
             Doctor: response.Data,
+          },
+        });
+      }
+    },
+    *searchSyn({ payload }, { call, put }) {
+      const response = yield call(queryKey, payload);
+      if (response.Success) {
+        yield put({
+          type: 'set',
+          payload: {
+            searchData: response.Data,
           },
         });
       }

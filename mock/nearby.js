@@ -6,12 +6,23 @@ for (let i = 0; i < 40; i += 1) {
     Id: `doc-${1000 + i}`,
     Name: `Doc${i}`,
     Gender: Math.round(Math.random()),
-    Age: Math.round(Math.random() * 100),
-    Title: Math.round(Math.random() * 5),
+    Age: Math.round(Math.random() * 40) + 20,
+    Title: Math.round(Math.random() * 4) + 1,
     Address: `${i}路${i}号`,
     Lat: 3.14 + i * 0.02,
     Lon: 106.54 - i * 0.02,
-    GoodAt: [`syn-${1000 + i}`, `syn-${1002 + i}`],
+    GoodAt: [
+      {
+        Id: `syn-${1000 + i}`,
+        Name: `证型${i}`,
+        PinYin: `ZX${i}`,
+      },
+      {
+        Id: `syn-${1001 + i}`,
+        Name: `证型${i + 1}`,
+        PinYin: `ZX${i + 1}`,
+      },
+    ],
   });
 }
 
@@ -93,7 +104,7 @@ function add(req, res, u, b) {
     Name: Name,
     Gender: Gender - 0,
     Age: Age - 0,
-    Title: Title,
+    Title: Title - 0,
     Address: Address,
     Lat: Lat - 0.0,
     Lon: Lon - 0.0,
@@ -124,13 +135,16 @@ function change(req, res, u, b) {
     result.Message = '请完善信息';
     return res.json(result);
   }
-  doctorData.map(item => {
+  doctorData = doctorData.slice().map(item => {
     if (item.Id === Id) {
-      result.Success = true;
-      item = { ...body };
+      body.Title -= 0;
+      body.Gender -= 0;
+      return body;
+    } else {
+      return item;
     }
   });
-
+  result.Success = true;
   return res.json(result);
 }
 

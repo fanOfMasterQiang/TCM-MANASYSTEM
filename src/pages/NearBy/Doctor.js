@@ -46,6 +46,7 @@ class Doctor extends PureComponent {
             title = '主任医师';
             break;
           default:
+            console.log(record);
             title = '暂无';
         }
         return title;
@@ -134,8 +135,8 @@ class Doctor extends PureComponent {
     });
   };
 
-  editDoctor = record => {
-    router.push(`${record.Id}`);
+  editDoctor = DId => {
+    router.push(`/nearby/doctorInfo?Id=${DId}`);
   };
 
   handleDelete = () => {
@@ -177,7 +178,7 @@ class Doctor extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row type="flex" justify="space-between">
           <Col md={8} lg={8} xl={8}>
-            <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+            <Button icon="plus" type="primary" onClick={() => this.editDoctor()}>
               新建
             </Button>
             {selectedRows && selectedRows.length > 0 && (
