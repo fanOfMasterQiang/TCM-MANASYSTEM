@@ -46,7 +46,6 @@ class Doctor extends PureComponent {
             title = '主任医师';
             break;
           default:
-            console.log(record);
             title = '暂无';
         }
         return title;
