@@ -226,10 +226,11 @@ export default class Ellipsis extends Component {
     if (isSupportLineClamp) {
       const style = `#${id}{-webkit-line-clamp:${lines};-webkit-box-orient: vertical;}`;
 
+      // span内添加whiteSpace 支持换行，样式错误时应删除
       const node = (
         <div id={id} className={cls} {...restProps}>
           <style>{style}</style>
-          {children}
+          <span style={{whiteSpace:"pre-wrap"}}>{children}</span>
         </div>
       );
 

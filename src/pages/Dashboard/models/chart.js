@@ -1,37 +1,20 @@
-import { fakeChartData } from '@/services/api';
+import { fetchData } from '@/services/chart/chart';
 
 export default {
   namespace: 'chart',
 
   state: {
-    visitData: [],
-    visitData2: [],
-    salesData: [],
-    searchData: [],
-    offlineData: [],
-    offlineChartData: [],
-    salesTypeData: [],
-    salesTypeDataOnline: [],
-    salesTypeDataOffline: [],
-    radarData: [],
+    ageData: [],
+    genderData: [],
     loading: false,
   },
 
   effects: {
     *fetch(_, { call, put }) {
-      const response = yield call(fakeChartData);
+      const response = yield call(fetchData);
       yield put({
         type: 'save',
-        payload: response,
-      });
-    },
-    *fetchSalesData(_, { call, put }) {
-      const response = yield call(fakeChartData);
-      yield put({
-        type: 'save',
-        payload: {
-          salesData: response.salesData,
-        },
+        payload: response.Data,
       });
     },
   },
@@ -40,21 +23,14 @@ export default {
     save(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        ageData:payload.ageCount,
+        genderData:payload.genderData,
       };
     },
     clear() {
       return {
-        visitData: [],
-        visitData2: [],
-        salesData: [],
-        searchData: [],
-        offlineData: [],
-        offlineChartData: [],
-        salesTypeData: [],
-        salesTypeDataOnline: [],
-        salesTypeDataOffline: [],
-        radarData: [],
+        ageData: [],
+        genderData: [],
       };
     },
   },

@@ -9,6 +9,7 @@ import logo from '../assets/logo.svg';
 import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
+import PageLoading from '@/components/PageLoading';
 import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
@@ -45,19 +46,21 @@ const query = {
 
 class BasicLayout extends React.Component {
   componentDidMount() {
+    let uid =localStorage.getItem("userId");
     const {
       dispatch,
-      route: { routes, path, authority },
+      route: { routes, authority },
     } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
+      payload:{Id:uid}
     });
     dispatch({
       type: 'setting/getSetting',
     });
     dispatch({
       type: 'menu/getMenuData',
-      payload: { routes, path, authority },
+      payload: { routes, authority },
     });
   }
 
@@ -153,13 +156,14 @@ class BasicLayout extends React.Component {
             )}
           </ContainerQuery>
         </DocumentTitle>
-        <Suspense fallback={null}>{this.renderSettingDrawer()}</Suspense>
+        <Suspense fallback={<PageLoading />}>{this.renderSettingDrawer()}</Suspense>
       </React.Fragment>
     );
   }
 }
 
-export default connect(({ global, setting, menu: menuModel }) => ({
+export default connect(({ global, setting, menu: menuModel,user }) => ({
+  currentUser:user.currentUser,
   collapsed: global.collapsed,
   layout: setting.layout,
   menuData: menuModel.menuData,

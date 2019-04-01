@@ -1,8 +1,9 @@
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import { notification,message } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
+import { ParamData } from './buildParams';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -56,6 +57,9 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
+
+
+
 /**
  * Requests a URL, returning a promise.
  *
@@ -79,7 +83,7 @@ export default function request(url, option) {
     .digest('hex');
 
   const defaultOptions = {
-    credentials: 'include',
+    credentials: 'omit',
   };
   const newOptions = { ...defaultOptions, ...options };
   if (
@@ -88,14 +92,21 @@ export default function request(url, option) {
     newOptions.method === 'DELETE'
   ) {
     if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
-      };
-      newOptions.body = JSON.stringify(newOptions.body);
-    } else {
-      // newOptions.body is FormData
+      if(newOptions.headers["Content-Type"]==="application/x-www-form-urlencoded"){
+        newOptions.headers = {
+          Accept: 'application/json',
+          ...newOptions.headers,
+        };
+        newOptions.body = ParamData(newOptions.body,newOptions.traditional);
+      }else {
+        newOptions.headers = {
+          Accept: 'application/json',
+          'Content-Type': 'Content-Type; charset=utf-8',
+          ...newOptions.headers,
+        };
+        newOptions.body = JSON.stringify(newOptions.body);
+      }
+    } else{
       newOptions.headers = {
         Accept: 'application/json',
         ...newOptions.headers,
@@ -118,7 +129,11 @@ export default function request(url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return fetch(url, newOptions)
+  const timeOut = new Promise((resolve,reject)=> {
+    setTimeout(() => reject(new Error('Request_Timeout')), 5000);
+  });
+
+  return Promise.race([fetch(url, newOptions),timeOut])
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
@@ -130,6 +145,10 @@ export default function request(url, option) {
       return response.json();
     })
     .catch(e => {
+      if (e.message === "Request_Timeout") {
+        message.error("请求超时");
+        return;
+      }
       const status = e.name;
       if (status === 401) {
         // @HACK
@@ -150,6 +169,8 @@ export default function request(url, option) {
       }
       if (status >= 404 && status < 422) {
         router.push('/exception/404');
+        return;
       }
+      message.error("请求出现错误！")
     });
 }

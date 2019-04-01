@@ -1,4 +1,14 @@
 export default {
+  'app.analysis.total': '总人数',
+  'app.analysis.ages': '年龄区间',
+  'app.analysis.age': '年龄',
+  'app.analysis.gender': '性别占比',
+  'app.analysis.gender-analysis': '性别分析',
+  'app.analysis.gender-m': '男',
+  'app.analysis.gender-f': '女',
+
+
+
   'app.analysis.test': '工专路 {no} 号店',
   'app.analysis.introduce': '指标说明',
   'app.analysis.total-sales': '总销售额',

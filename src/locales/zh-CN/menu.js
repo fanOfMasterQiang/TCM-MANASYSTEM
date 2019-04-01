@@ -1,12 +1,24 @@
 export default {
   'menu.home': '首页',
   'menu.login': '登录',
-  'menu.register': '注册',
-  'menu.register.result': '注册结果',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
-  'menu.dashboard.monitor': '监控页',
-  'menu.dashboard.workplace': '工作台',
+
+  'menu.users': '用户',
+  'menu.users.users-mana': '用户管理',
+  'menu.users.userInfo': '用户信息',
+
+  'menu.diagnosis': '自诊',
+  'menu.diagnosis.syndrome': '证型管理',
+  'menu.diagnosis.symptom': '症状管理',
+
+  'menu.nearby': '附近',
+  'menu.nearby.doctor': '医生',
+  'menu.nearby.doctorInfo': '医生信息',
+
+  'menu.number': '成员',
+  'menu.number.advancedform': '成员管理',
+
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
   'menu.form.stepform': '分步表单',
