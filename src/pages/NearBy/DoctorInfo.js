@@ -41,6 +41,16 @@ class DoctorInfo extends PureComponent {
     }
   }
 
+  componentWillUnmount(){
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'doctorInfo/setStates',
+      payload: {
+        Doctor: ClearItem,
+      },
+    });
+  }
+
   handleSubmit = e => {
     const {
       dispatch,
@@ -56,12 +66,6 @@ class DoctorInfo extends PureComponent {
           type: Doctor.Id ? 'doctorInfo/changeItem' : 'doctorInfo/addItem',
           payload: { ...Doctor },
           callback: () => {
-            dispatch({
-              type: 'doctorInfo/setStates',
-              payload: {
-                Doctor: ClearItem,
-              },
-            });
             router.go(-1);
           },
         });

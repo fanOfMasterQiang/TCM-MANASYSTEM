@@ -174,6 +174,24 @@ export default [
           },
         ],
       },
+      // recipes
+      {
+        path: '/recipes',
+        icon: 'form',
+        name: 'recipes',
+        routes: [
+          {
+            path: '/recipes/index',
+            name: 'recipes',
+            component: './Recipes/Recipes',
+          },
+          {
+            path: '/recipes/recipeInfo',
+            name: 'recipeInfo',
+            component: './Recipes/RecipeInfo',
+          },
+        ],
+      },
       {
         component: '404',
       },
