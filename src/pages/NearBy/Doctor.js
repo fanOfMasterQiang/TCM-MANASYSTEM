@@ -65,7 +65,7 @@ class Doctor extends PureComponent {
         } = this.props;
         return showSource && showSource.length >= 1 ? (
           <div key={record.Id}>
-            <Button onClick={() => this.editDoctor(record.Id)} className={styles.btn}>
+            <Button onClick={() => this.editDoctor(record)} className={styles.btn}>
               编辑
             </Button>
           </div>
@@ -134,8 +134,15 @@ class Doctor extends PureComponent {
     });
   };
 
-  editDoctor = DId => {
-    router.push(`/nearby/doctorInfo?Id=${DId}`);
+  editDoctor = record => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'doctorInfo/set',
+      payload: {
+        Doctor:{...record}
+      },
+    });
+    router.push(`/nearby/doctorInfo?Id=${record.Id}`);
   };
 
   handleDelete = () => {

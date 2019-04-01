@@ -54,7 +54,7 @@ class Recipes extends PureComponent {
         } = this.props;
         return showSource && showSource.length >= 1 ? (
           <div key={record.Id}>
-            <Button onClick={() => this.editDoctor(record.Id)} className={styles.btn}>
+            <Button onClick={() => this.editDoctor(record)} className={styles.btn}>
               编辑
             </Button>
           </div>
@@ -123,8 +123,15 @@ class Recipes extends PureComponent {
     });
   };
 
-  editDoctor = Id => {
-    router.push(`/recipes/recipeInfo?Id=${Id}`);
+  editDoctor = record => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'recipeInfo/set',
+      payload: {
+        Recipes:{...record}
+      },
+    });
+    router.push(`/recipes/recipeInfo?Id=${record.Id}`);
   };
 
   handleDelete = () => {

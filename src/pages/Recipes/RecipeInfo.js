@@ -26,20 +26,14 @@ const ClearItem = {
 @Form.create()
 class RecipeInfo extends PureComponent {
   componentDidMount() {
-    const { dispatch, location,form,recipeInfo:{Recipes} } = this.props;
-    if (location.query.Id) {
-      dispatch({
-        type: 'recipeInfo/queryInfo',
-        payload: {
-          Id: location.query.Id,
-        },
+    const { form,recipeInfo:{Recipes}} = this.props;
+    if(Recipes.Id){
+      Object.keys(form.getFieldsValue()).forEach(key => {
+        const obj = {};
+        obj[key] = Recipes[key] || null;
+        form.setFieldsValue(obj);
       });
     }
-    Object.keys(form.getFieldsValue()).forEach(key => {
-      const obj = {};
-      obj[key] = Recipes[key] || null;
-      form.setFieldsValue(obj);
-    });
   }
 
   componentWillUnmount(){
@@ -161,8 +155,8 @@ class RecipeInfo extends PureComponent {
               >
                 <Option value={1}>家常菜</Option>
                 <Option value={2}>节气菜</Option>
-                <Option value={3}>汤</Option>
-                <Option value={4}>粥</Option>
+                <Option value={3}>粥</Option>
+                <Option value={4}>汤</Option>
               </Select>
             </FormItem>
             <FormItem {...formItemLayout} label="材料">
