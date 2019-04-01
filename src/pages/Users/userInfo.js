@@ -28,6 +28,14 @@ class userInfo extends Component {
       userInfo: { user, lineData },
     } = this.props;
     const { Name, Gender, Id, Age } = user;
+    const xAxis={
+      line: { lineWidth: 2,stroke: 'black', },
+      label: { textAlign: 'center', fill: '#404040', fontSize: '10',}
+    };
+    const yAxis={
+      line: { lineWidth: 2,stroke: 'black', },
+      label: { textAlign: 'center', fill: '#404040', fontSize: '10',color:'black'}
+    }
     return (
       <PageHeaderWrapper title="基础详情页" loading={loading}>
         <Card bordered={false}>
@@ -37,10 +45,39 @@ class userInfo extends Component {
             <Description term="用户性别">{Gender ? '女' : '男'}</Description>
             <Description term="用户年龄">{Age}</Description>
           </DescriptionList>
-          <Divider style={{ marginBottom: 32 }} />
         </Card>
-        <Card>
-          <MiniArea line height={500} data={lineData} />
+        <Card title='血压数据' style={{padding:50}}>
+          <MiniArea
+            line
+            height={200}
+            borderColor='blue'
+            color='rgba(0,0,0,0)'
+            xAxis={xAxis}
+            yAxis={yAxis}
+            data={lineData.recordXY}
+          />
+        </Card>
+        <Card title='血糖数据' style={{padding:50}}>
+          <MiniArea
+            line
+            height={200}
+            borderColor='green'
+            color='rgba(0,0,0,0)'
+            xAxis={xAxis}
+            yAxis={yAxis}
+            data={lineData.recordXT}
+          />
+        </Card>
+        <Card title='体温数据' style={{padding:50}}>
+          <MiniArea
+            line
+            height={200}
+            borderColor='yellow'
+            color='rgba(0,0,0,0)'
+            xAxis={xAxis}
+            yAxis={yAxis}
+            data={lineData.recordTW}
+          />
         </Card>
       </PageHeaderWrapper>
     );

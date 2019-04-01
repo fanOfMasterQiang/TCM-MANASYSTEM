@@ -30,7 +30,7 @@ const ClearItem = {
 @Form.create()
 class DoctorInfo extends PureComponent {
   componentDidMount() {
-    const { dispatch, location } = this.props;
+    const { dispatch, location,form,doctorInfo:{Doctor} } = this.props;
     if (location.query.Id) {
       dispatch({
         type: 'doctorInfo/queryInfo',
@@ -39,6 +39,11 @@ class DoctorInfo extends PureComponent {
         },
       });
     }
+    Object.keys(form.getFieldsValue()).forEach(key => {
+      const obj = {};
+      obj[key] = Doctor[key] || null;
+      form.setFieldsValue(obj);
+    });
   }
 
   componentWillUnmount(){

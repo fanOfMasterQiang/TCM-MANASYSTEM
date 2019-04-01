@@ -1,4 +1,5 @@
 import { parse } from 'url';
+
 const Format = (d, fmt) => {
   let o = {
     'M+': d.getMonth() + 1, // 月份
@@ -24,9 +25,19 @@ const Format = (d, fmt) => {
 let usersData = [];
 let usersRelate = [];
 for (let i = 0; i < 100; i += 1) {
-  let record = [];
+  let recordXY = [];
+  let recordXT = [];
+  let recordTW = [];
   for (let j = 14; j > 0; j--) {
-    record.push({
+    recordXY.push({
+      x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
+      y: Math.round(Math.random() * 100),
+    });
+    recordXT.push({
+      x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
+      y: Math.round(Math.random() * 100),
+    });
+    recordTW.push({
       x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
       y: Math.round(Math.random() * 100),
     });
@@ -34,9 +45,17 @@ for (let i = 0; i < 100; i += 1) {
   usersData.push({
     Id: `uid-${1000 + i}`,
     Name: `user${i}`,
+    Phone:'',
+    Born:'',
+    Password:'',
+    Avatar:'',
     Gender: Math.round(Math.random()),
     Age: Math.round(Math.random() * 100),
-    Record: record,
+    Record: {
+      recordXY,
+      recordXT,
+      recordTW
+    },
   });
 }
 

@@ -26,7 +26,7 @@ const ClearItem = {
 @Form.create()
 class RecipeInfo extends PureComponent {
   componentDidMount() {
-    const { dispatch, location } = this.props;
+    const { dispatch, location,form,recipeInfo:{Recipes} } = this.props;
     if (location.query.Id) {
       dispatch({
         type: 'recipeInfo/queryInfo',
@@ -35,6 +35,11 @@ class RecipeInfo extends PureComponent {
         },
       });
     }
+    Object.keys(form.getFieldsValue()).forEach(key => {
+      const obj = {};
+      obj[key] = Recipes[key] || null;
+      form.setFieldsValue(obj);
+    });
   }
 
   componentWillUnmount(){

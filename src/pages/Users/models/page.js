@@ -18,6 +18,10 @@ export default {
       Name: "",
       Gender:0,
       Age:0,
+      Phone:'',
+      Born:'',
+      Password:'',
+      Avatar:'',
     },
 
   },

@@ -134,6 +134,7 @@ export default [
           {
             path: '/users/info',
             name: 'userInfo',
+            hideInMenu: true,
             component: './Users/userInfo',
           },
         ],
@@ -170,6 +171,7 @@ export default [
           {
             path: '/nearby/doctorInfo',
             name: 'doctorInfo',
+            hideInMenu: true,
             component: './NearBy/DoctorInfo',
           },
         ],
@@ -188,6 +190,7 @@ export default [
           {
             path: '/recipes/recipeInfo',
             name: 'recipeInfo',
+            hideInMenu: true,
             component: './Recipes/RecipeInfo',
           },
         ],
