@@ -362,7 +362,7 @@ class pageList extends PureComponent {
       dataIndex: 'Name',
       width: '20%',
       render:(text,record)=>
-        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>text</a>
+        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>{text}</a>
     },
     {
       title: '性别',
