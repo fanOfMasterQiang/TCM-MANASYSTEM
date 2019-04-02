@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button, message } from 'antd';
+import { Row, Col, Card, Form, Input, Button, message,Modal,Upload } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
@@ -9,6 +9,89 @@ import styles from './Recipes.less';
 
 const FormItem = Form.Item;
 FormItem.className = styles['ant-form-item'];
+
+const VideoMana = (props => {
+  const { recipes:{Item, modalVisible},dispatch} = props;
+
+  const closeModal = () => {
+    dispatch({
+      type: 'recipes/setStates',
+      payload: {
+        modalVisible:false,
+      },
+    });
+  };
+
+  const beforeUpload = (file) =>{
+    const isVideo = file.type.indexOf('video') !== -1;
+    if (!isVideo) {
+      message.error('You can only upload video file!');
+    }
+    const isLt1G = file.size / 1024 / 1024 < 1024;
+    if (!isLt1G) {
+      message.error('Image must smaller than 1GB!');
+    }
+    return isVideo && isLt1G;
+  };
+
+  const onChange = (info) =>{
+    if (info.file.status === 'done') {
+      if(info.fileList.length > 1){
+        info.fileList.splice(0,1);
+      }
+      message.success(`${info.file.name} file uploaded successfully`);
+    }else {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const onRemove = () =>{
+    dispatch({
+      type: 'recipes/upload',
+      payload: {
+        Id:Item.Id,
+        Video:null
+      },
+    });
+  };
+
+  return (
+    <Modal
+      centered
+      destroyOnClose
+      width={640}
+      title="视频管理"
+      visible={modalVisible}
+      onOk={()=>closeModal()}
+      onCancel={() => closeModal()}
+    >
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
+        <div>
+          {Item.Video?
+            <video className={styles.image}>
+              <source src={Item.Video} />
+            </video>
+            :null}
+          <Upload
+            name="topicImg"
+            multiple={false}
+            accept=".mp4,.wmv,.avi"
+            className="topic-insertImg"
+            action=""
+            beforeUpload={(file)=>beforeUpload(file)}
+            onChange={info => onChange(info)}
+            onRemove={() => onRemove()}
+          >
+            <Button>
+              <span>选择视频</span>
+            </Button>
+          </Upload>
+        </div>
+      </FormItem>
+    </Modal>
+  );
+});
+
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ recipes, loading }) => ({
@@ -54,8 +137,11 @@ class Recipes extends PureComponent {
         } = this.props;
         return showSource && showSource.length >= 1 ? (
           <div key={record.Id}>
-            <Button onClick={() => this.editDoctor(record)} className={styles.btn}>
+            <Button onClick={() => this.editRecipes(record)} className={styles.btn}>
               编辑
+            </Button>
+            <Button onClick={() => this.editRecipeVideo(record)} className={styles.btn}>
+              视频更改
             </Button>
           </div>
         ) : null;
@@ -123,7 +209,7 @@ class Recipes extends PureComponent {
     });
   };
 
-  editDoctor = record => {
+  editRecipes = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'recipeInfo/set',
@@ -133,6 +219,18 @@ class Recipes extends PureComponent {
     });
     router.push(`/recipes/recipeInfo?Id=${record.Id}`);
   };
+
+  editRecipeVideo = async record => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'recipes/set',
+      payload: {
+        Item:{...record},
+        modalVisible:true
+      },
+    });
+  };
+
 
   handleDelete = () => {
     const {
@@ -230,6 +328,7 @@ class Recipes extends PureComponent {
             />
           </div>
         </Card>
+        <VideoMana {...this.props} />
       </PageHeaderWrapper>
     );
   }

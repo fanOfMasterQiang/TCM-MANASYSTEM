@@ -41,13 +41,13 @@ const buildParams = (prefix, obj, traditional, add) => {
         add(prefix, v);
       } else {
         // Item is non-scalar (array or object), encode its numeric index.
-        buildParams(prefix + "[" + (typeof v === "object" ? i : "") + "]", v, traditional, add);
+        buildParams(`${prefix  }[${  typeof v === "object" ? i : ""  }]`, v, traditional, add);
       }
     });
   } else if (!traditional && DataType.isObj(obj)) {
     // Serialize object item.
     for (name in obj) {
-      buildParams(prefix + "[" + name + "]", obj[name], traditional, add);
+      buildParams(`${prefix  }[${  name  }]`, obj[name], traditional, add);
     }
   } else {
     // Serialize scalar item.
@@ -59,11 +59,11 @@ export const ParamData = (data, traditional) => {
   let prefix;
   let  s = [];
   let  add = (key, value)=> {
-      if (!DataType.isFunction(value)) {
-        value = value == null ? "" : value;
-        s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
-      }
-    };
+    if (!DataType.isFunction(value)) {
+      value = value == null ? "" : value;
+      s[s.length] = `${encodeURIComponent(key)  }=${  encodeURIComponent(value)}`;
+    }
+  };
 
   for (prefix in data) {
     buildParams(prefix, data[prefix], traditional, add);
@@ -86,7 +86,7 @@ export const ObjectToFormData = (obj, urlencoded, namespace) => {
 
       // if the property is an object, but not a File, use recursivity.
       if(typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
-        fd = objectToFormData(obj[property], fd, formKey);
+        fd = ObjectToFormData(obj[property], fd, formKey);
       } else {
         // if it's a string or a File object
         if(obj[property] !== undefined  ){
@@ -97,6 +97,47 @@ export const ObjectToFormData = (obj, urlencoded, namespace) => {
     }
   }
   return fd;
+};
+
+export const MakeFormData = (obj, form_data) => {
+  let data = [];
+  if (obj instanceof File) {
+    data.push({key: "", value: obj});
+  }
+  else if (obj instanceof Array ) {
+    for (let j=0,len=obj.length;j<len;j++) {
+      let arr = MakeFormData(obj[j]);
+      for (let k=0,l=arr.length;k<l;k++) {
+        let key = form_data ? j+arr[k].key : `[${j}]${arr[k].key}`;
+        data.push({key: key, value: arr[k].value})
+      }
+    }
+  }
+  else if (typeof obj === 'object') {
+    for (let j in obj) {
+      let arr = MakeFormData(obj[j]);
+      for (let k=0,l=arr.length;k<l;k++) {
+        let key = form_data ? j+arr[k].key : `[${j}]${arr[k].key}`;
+        data.push({key: key, value: arr[k].value})
+      }
+    }
+  }
+  else
+  {
+    data.push({key: "", value: obj});
+  }
+  if (form_data)
+  {
+    // 封装
+    for (let i=0,len=data.length;i<len;i++)
+    {
+      form_data.append(data[i].key, data[i].value)
+    }
+  }
+  else
+  {
+    return data;
+  }
 };
 
 

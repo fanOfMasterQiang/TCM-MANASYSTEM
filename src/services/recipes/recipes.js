@@ -49,3 +49,17 @@ export async function delRecipe(params) {
     },
   });
 }
+
+
+export async function upload(params) {
+  return request(`/api/recipe/upload`, {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+    headers: {
+      // 'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

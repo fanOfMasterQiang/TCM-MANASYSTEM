@@ -17,7 +17,6 @@ export default {
       Id: "",
       Name: "",
       Gender:0,
-      Age:0,
       Phone:'',
       Born:'',
       Password:'',

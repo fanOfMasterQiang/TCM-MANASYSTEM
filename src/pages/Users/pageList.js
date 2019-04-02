@@ -30,7 +30,6 @@ const ClearItem = {
   Id: "",
   Name: "",
   Gender:0,
-  Age:0,
   Phone:'',
   Born:'',
   Password:'',
@@ -59,7 +58,6 @@ const ManaForm = Form.create()(props => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       Item.Name = fieldsValue.Name;
-      Item.Age = fieldsValue.Age;
       Item.Phone = fieldsValue.Phone;
       Item.Password = fieldsValue.Password;
       if(Item.Id === ""){
@@ -178,11 +176,6 @@ const ManaForm = Form.create()(props => {
         {form.getFieldDecorator('Name', {
           rules: [{ required: true, message: '请输入姓名！', min: 1 }],
         })(<Input placeholder="请输入姓名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="年龄">
-        {form.getFieldDecorator('Age', {
-          rules: [{required: true, message: '请输入年龄！'}],
-        })(<Input placeholder="请输入年龄" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
         <RadioGroup
@@ -487,8 +480,8 @@ class pageList extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Born',
       width: '20%',
     },
     {

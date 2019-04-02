@@ -89,6 +89,7 @@ function add(req, res, u, b) {
   recipeData.push({
     ...body,
     Id: `rec-${1001 + recipeData.length}`,
+    Type: Type - 0,
   });
   result.Success = true;
   return res.json(result);
@@ -117,7 +118,10 @@ function change(req, res, u, b) {
   }
   recipeData = recipeData.slice().map(item => {
     if (item.Id === Id) {
-      return body;
+      return {
+        ...body,
+        Type: Type - 0,
+      };
     } else {
       return item;
     }

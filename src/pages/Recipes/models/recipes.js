@@ -1,4 +1,4 @@
-import { queryKey, delRecipe } from '@/services/recipes/recipes';
+import { queryKey, delRecipe,upload } from '@/services/recipes/recipes';
 
 export default {
   namespace: 'recipes',
@@ -39,6 +39,10 @@ export default {
     },
     *removeData({ payload, callback }, { call }) {
       yield call(delRecipe, payload);
+      if (callback) callback();
+    },
+    *upload({ payload, callback }, { call }) {
+      yield call(upload, payload);
       if (callback) callback();
     },
     *setStates({ payload, callback }, { put }) {

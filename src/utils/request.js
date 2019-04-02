@@ -130,7 +130,7 @@ export default function request(url, option) {
     }
   }
   const timeOut = new Promise((resolve,reject)=> {
-    setTimeout(() => reject(new Error('Request_Timeout')), 5000);
+    setTimeout(() => reject(new Error('Request_Timeout')),newOptions.timeOut || 5000);
   });
 
   return Promise.race([fetch(url, newOptions),timeOut])

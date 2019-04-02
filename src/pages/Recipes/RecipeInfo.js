@@ -54,7 +54,6 @@ class RecipeInfo extends PureComponent {
     } = this.props;
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
-      console.log(err)
       if (!err) {
         Recipes.Name = values.Name;
         Recipes.Practice = values.Practice;
@@ -197,68 +196,6 @@ class RecipeInfo extends PureComponent {
                   beforeUpload={(file)=>beforeUpload(file)}
                   onChange={info => onChange(info)}
                   onRemove={() => onRemove()}
-                >
-                  <Button>
-                    <span>选择图片</span>
-                  </Button>
-                </Upload>
-              </div>
-            </FormItem>
-            <FormItem {...formItemLayout} label="视频">
-              <div style={{ height: 400 }}>
-                {Recipes.Video?
-                  (<video>
-                    <source src={Recipes.Video} />
-                  </video>)
-                  :null}
-                <Upload
-                  name="topicImg"
-                  multiple={false}
-                  accept=".mp4,.wmv,.avi"
-                  className="topic-insertImg"
-                  action=""
-                  beforeUpload={(file)=>{
-                    const isVideo = file.type.indexOf('video') !== -1;
-                    if (!isVideo) {
-                      message.error('You can only upload video file!');
-                    }
-                    const isLt1G = file.size / 1024 / 1024 < 1024;
-                    if (!isLt1G) {
-                      message.error('Image must smaller than 1GB!');
-                    }
-                    return isVideo && isLt1G;
-                  }}
-                  onChange={info => {
-                    if (info.file.status === 'done') {
-                      if(info.fileList.length > 1){
-                        info.fileList.splice(0,1);
-                      }
-                      let reader = new FileReader();
-                      reader.readAsDataURL(info.file.originFileObj);
-                      reader.onload = (event) =>{
-                        dispatch({
-                          type: 'recipeInfo/set',
-                          payload: {
-                            Recipes: {
-                              ...Recipes,
-                              Video:event.target.result
-                            },
-                          },
-                        });
-                      }
-                    }
-                  }}
-                  onRemove={() => {
-                    dispatch({
-                      type: 'recipeInfo/set',
-                      payload: {
-                        Recipes: {
-                          ...Recipes,
-                          Image:''
-                        },
-                      },
-                    });
-                  }}
                 >
                   <Button>
                     <span>选择图片</span>
