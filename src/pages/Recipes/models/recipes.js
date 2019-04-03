@@ -1,4 +1,4 @@
-import { queryKey, delRecipe,upload } from '@/services/recipes/recipes';
+import { queryKey, delRecipe,delVideo } from '@/services/recipes/recipes';
 
 export default {
   namespace: 'recipes',
@@ -18,7 +18,7 @@ export default {
       Type: 0,
       Image: '',
       Practice: '',
-      Video: '',
+      VideoSource: '',
       Materials: [],
     },
   },
@@ -41,8 +41,8 @@ export default {
       yield call(delRecipe, payload);
       if (callback) callback();
     },
-    *upload({ payload, callback }, { call }) {
-      yield call(upload, payload);
+    *delVideo({ payload, callback }, { call }) {
+      yield call(delVideo, payload);
       if (callback) callback();
     },
     *setStates({ payload, callback }, { put }) {

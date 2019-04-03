@@ -14,7 +14,7 @@ for (let i = 0; i < 12; i += 1) {
       Title: ``,
       Abstract: ``,
       Description: ``,
-      Url: `../../video.mp4`,
+      Url: `C:\\Users\\Public\\Videos\\Sample Videos\\野生动物.wmv`,
       AcupointId: ``,
     },
     Material:"材料一：50g;材料二：50g;材料三：50g"
@@ -169,10 +169,77 @@ function del(req, res, u, b) {
   return res.json(result);
 }
 
+function delVideo(req, res, u, b) {
+  const result = {
+    Success: false,
+    Data: null,
+    Message: '',
+  };
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    url = req.url; // eslint-disable-line
+  }
+
+  const body = (b && b.body) || req.body;
+  const { RecipeId } = body;
+  if (!RecipeId) {
+    result.Message = 'RecipeId不能为空';
+    return res.json(result);
+  }
+  recipeData = recipeData.map(item => {
+    if (item.Id === RecipeId) {
+      return {
+        ...item,
+        VideoSource:null
+      }
+    }else {
+      return item
+    }
+  });
+  result.Success = true;
+  return res.json(result);
+}
+
+function upload(req, res, u, b) {
+  const result = {
+    Success: false,
+    Data: null,
+    Message: '',
+  };
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    url = req.url; // eslint-disable-line
+  }
+
+  const body = (b && b.body) || req.body;
+  const { RecipeId, File } = body;
+  if (!RecipeId) {
+    result.Message = 'RecipeId不能为空';
+    return res.json(result);
+  }
+  recipeData.map(item => {
+    if (item.Id === RecipeId) {
+      item.VideoSource = {
+        Id: `vde-${1000 + Math.round(Math.random()*2000)}`,
+        GroupType: 1,
+        Title: ``,
+        Abstract: ``,
+        Description: ``,
+        Url: `C:\\Users\\Public\\Videos\\Sample Videos\\野生动物.wmv`,
+        AcupointId: ``,
+      }
+    }
+  });
+  result.Success = true;
+  return res.json(result);
+}
+
 export default {
   'GET /api/recipe/query': query,
   'GET /api/recipe/key': querykey,
   'POST /api/recipe/add': add,
   'POST /api/recipe/change': change,
   'POST /api/recipe/del': del,
+  'POST /api/recipe/upload': upload,
+  'POST /api/recipe/delVideo': delVideo,
 };

@@ -15,6 +15,12 @@ const VideoMana = (props => {
 
   const closeModal = () => {
     dispatch({
+      type: 'recipes/queryData',
+      payload: {
+        modalVisible:false,
+      },
+    });
+    dispatch({
       type: 'recipes/setStates',
       payload: {
         modalVisible:false,
@@ -40,20 +46,32 @@ const VideoMana = (props => {
         info.fileList.splice(0,1);
       }
       message.success(`${info.file.name} file uploaded successfully`);
-    }else {
-      message.error(`${info.file.name} file upload failed.`);
+    }
+    if (info.file.status === 'error') {
+      message.error(`${info.file.name} file uploaded failed`);
     }
   };
 
   const onRemove = () =>{
     dispatch({
-      type: 'recipes/upload',
+      type: 'recipes/delVideo',
       payload: {
-        Id:Item.Id,
-        Video:null
+        RecipeId:Item.Id,
       },
+      callback:()=>{
+        dispatch({
+          type: 'recipes/set',
+          payload: {
+            Item:{
+              ...Item,
+              VideoSource:null
+            },
+          },
+        });
+      }
     });
   };
+
 
   return (
     <Modal
@@ -68,18 +86,20 @@ const VideoMana = (props => {
       onCancel={() => closeModal()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
-        <div>
-          {Item.Video?
-            <video className={styles.image}>
-              <source src={Item.Video} />
-            </video>
-            :null}
+        <div onClick={()=>onRemove()}>
           <Upload
             name="topicImg"
             multiple={false}
             accept=".mp4,.wmv,.avi"
             className="topic-insertImg"
             action=""
+            fileList={Item.VideoSource?[{
+              uid: 'uid',
+              name: Item.VideoSource.Url,
+              status: 'done',
+              response: '{"status": "success"}',
+              linkProps: '{"download": "image"}',
+            },]:null}
             beforeUpload={(file)=>beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}

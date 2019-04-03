@@ -58,7 +58,19 @@ export async function upload(params) {
       ...params,
     },
     headers: {
-      // 'Content-Type': 'multipart/form-data',
+      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function delVideo(params) {
+  return request(`/api/recipe/delVideo`, {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+    headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
