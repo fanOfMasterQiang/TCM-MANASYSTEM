@@ -3,54 +3,120 @@ import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Button, message,Modal,Upload } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import Ellipsis from '@/components/Ellipsis';
 import router from 'umi/router';
+import styles from './Acupoint.less';
 
-import styles from './Recipes.less';
 
 const FormItem = Form.Item;
 FormItem.className = styles['ant-form-item'];
+const ClearItem = {
+  Id: "",
+  Name: "",
+  Description:'',
+  Image:'',
+  VideoSource:{},
+};
+const setInfo ={};
 
-const VideoMana = (props => {
-  const { recipes:{Item, modalVisible},dispatch} = props;
+const EditModal = (props => {
+  const { acupoint:{Item, modalVisible},dispatch,form} = props;
+
+  setInfo.setBaseInfo =() =>{
+    Object.keys(form.getFieldsValue()).forEach(key => {
+      const obj = {};
+      obj[key] = Item[key] || null;
+      form.setFieldsValue(obj);
+    });
+  };
 
   const closeModal = () => {
     dispatch({
-      type: 'recipes/setStates',
+      type: 'acupoint/setStates',
       payload: {
         modalVisible:false,
+        Item:ClearItem
       },
     });
   };
 
-  const beforeUpload = (file) =>{
-    const isVideo = file.type.indexOf('video') !== -1;
-    if (!isVideo) {
-      message.error('You can only upload video file!');
-    }
-    const isLt1G = file.size / 1024 / 1024 < 1024;
-    if (!isLt1G) {
-      message.error('Image must smaller than 1GB!');
-    }
-    return isVideo && isLt1G;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      Item.Name = fieldsValue.Name;
+      Item.Description = fieldsValue.Description;
+      if(Item.Id === ""){
+        dispatch({
+          type: 'acupoint/addData',
+          payload: {
+            ...Item,
+            Id:null,
+          },
+          callback:()=>{
+            dispatch({
+              type: 'acupoint/queryData',
+              payload: {},
+            });
+          }
+        });
+      }else {
+        dispatch({
+          type: 'acupoint/updateData',
+          payload: {
+            ...Item
+          },
+          callback:()=>{
+            dispatch({
+              type: 'acupoint/queryData',
+              payload: {},
+            });
+          }
+        });
+      }
+      closeModal();
+      form.resetFields();
+    });
   };
 
+  const beforeUpload = (file) =>{
+    const isJPG = file.type === 'image/jpeg';
+    if (!isJPG) {
+      message.error('You can only upload JPG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJPG && isLt2M;
+  };
   const onChange = (info) =>{
     if (info.file.status === 'done') {
       if(info.fileList.length > 1){
         info.fileList.splice(0,1);
       }
-      message.success(`${info.file.name} file uploaded successfully`);
-    }else {
-      message.error(`${info.file.name} file upload failed.`);
+      let reader = new FileReader();
+      reader.readAsDataURL(info.file.originFileObj);
+      reader.onload = (event) =>{
+        dispatch({
+          type: 'acupoint/set',
+          payload: {
+            Item: {
+              ...Item,
+              Image:event.target.result
+            },
+          },
+        });
+      }
     }
   };
-
   const onRemove = () =>{
     dispatch({
-      type: 'recipes/upload',
+      type: 'acupoint/set',
       payload: {
-        Id:Item.Id,
-        Video:null
+        Item: {
+          ...Item,
+          Image:''
+        },
       },
     });
   };
@@ -59,33 +125,43 @@ const VideoMana = (props => {
     <Modal
       centered
       destroyOnClose
-      closable={false}
-      cancelButtonProps={{disabled:true}}
       width={640}
-      title="视频管理"
+      title="穴位编辑"
       visible={modalVisible}
-      onOk={()=>closeModal()}
+      onOk={()=>okHandle()}
       onCancel={() => closeModal()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="名称">
+        {form.getFieldDecorator('Name', {
+          rules: [{ required: true, message: '请输入名称！', min: 1 }],
+        })(<Input placeholder="请输入名称" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
+        {form.getFieldDecorator('Description', {
+          rules: [{ required: true, message: '请输入描述！', min: 1 }],
+        })(<Input placeholder="请输入描述" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="图片">
         <div>
-          {Item.Video?
-            <video className={styles.image}>
-              <source src={Item.Video} />
-            </video>
+          {Item.Image?
+            (<img
+              alt="ex"
+              className={styles.image}
+              src={Item.Image}
+            />)
             :null}
           <Upload
             name="topicImg"
             multiple={false}
-            accept=".mp4,.wmv,.avi"
-            className="topic-insertImg"
+            accept=".jpg,.jpeg,.png"
+            className={styles.image}
             action=""
             beforeUpload={(file)=>beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}
           >
             <Button>
-              <span>选择视频</span>
+              <span>选择图片</span>
             </Button>
           </Upload>
         </div>
@@ -96,38 +172,28 @@ const VideoMana = (props => {
 
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ recipes, loading }) => ({
-  recipes,
-  loading: loading.models.recipes,
+@connect(({ acupoint, loading }) => ({
+  acupoint,
+  loading: loading.models.acupoint,
 }))
 @Form.create()
-class Recipes extends PureComponent {
+class Acupoint extends PureComponent {
   columns = [
     {
-      title: '菜名',
+      title: '名称',
       dataIndex: 'Name',
       width: '30%',
     },
     {
-      title: '类型',
-      dataIndex: 'Title',
+      title: '描述',
+      dataIndex: 'Description',
       width: '30%',
-      render: (text, record) => {
-        let title = '';
-        switch (record.Type) {
-          case 1:
-            title = '家常菜';
-            break;
-          case 2:
-            title = '节气菜';
-            break;
-          case 3:
-            title = '粥';
-            break;
-          default:
-            title = '汤';
-        }
-        return title;
+      render: (text) => {
+        return(
+          <Ellipsis>
+            {text}
+          </Ellipsis>
+        );
       },
     },
     {
@@ -135,14 +201,14 @@ class Recipes extends PureComponent {
       width: '40%',
       render: (text, record) => {
         const {
-          recipes: { showSource },
+          acupoint: { showSource },
         } = this.props;
         return showSource && showSource.length >= 1 ? (
           <div key={record.Id}>
-            <Button onClick={() => this.editRecipes(record)} className={styles.btn}>
+            <Button onClick={() => this.setModalVisible(true,record)} className={styles.btn}>
               编辑
             </Button>
-            <Button onClick={() => this.editRecipeVideo(record)} className={styles.btn}>
+            <Button onClick={() => this.editAcupointVideo(record)} className={styles.btn}>
               视频更改
             </Button>
           </div>
@@ -154,7 +220,7 @@ class Recipes extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'recipes/queryData',
+      type: 'acupoint/queryData',
       payload: '',
     });
   }
@@ -167,7 +233,7 @@ class Recipes extends PureComponent {
       pageSize: pagination.pageSize,
     };
     dispatch({
-      type: 'recipes/queryPage',
+      type: 'acupoint/queryPage',
       payload: { ...params },
     });
   };
@@ -176,21 +242,22 @@ class Recipes extends PureComponent {
     const { form, dispatch } = this.props;
     form.resetFields();
     dispatch({
-      type: 'recipes/setStates',
-      payload: {
-        formValues: {},
-      },
+      type: 'acupoint/queryData',
+      payload: {},
     });
     dispatch({
-      type: 'recipes/queryData',
-      payload: {},
+      type: 'acupoint/setStates',
+      payload: {
+        formValues: {},
+        current:1,
+      },
     });
   };
 
   handleSelectRows = rows => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'recipes/setStates',
+      type: 'acupoint/setStates',
       payload: {
         selectedRows: rows,
       },
@@ -203,7 +270,7 @@ class Recipes extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       const { key } = fieldsValue;
       dispatch({
-        type: 'recipes/queryData',
+        type: 'acupoint/queryData',
         payload: {
           Key: key,
         },
@@ -211,52 +278,55 @@ class Recipes extends PureComponent {
     });
   };
 
-  editRecipes = record => {
+  editAcupointVideo = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'recipeInfo/set',
+      type: 'acuVideo/set',
       payload: {
-        Recipes:{...record}
+        AcupointId:record.Id
       },
     });
-    router.push(`/recipes/recipeInfo?Id=${record.Id}`);
+    router.push(`/acupoint/acupointVideo`);
   };
 
-  editRecipeVideo = async record => {
+  setModalVisible = async(flag,record) => {
+    let newRecord = Object.assign({},record)
     const { dispatch } = this.props;
-    dispatch({
-      type: 'recipes/set',
+    await dispatch({
+      type: 'acupoint/set',
       payload: {
-        Item:{...record},
-        modalVisible:true
+        modalVisible:!!flag,
+        Item:record ? newRecord:ClearItem,
       },
     });
+    if(record){
+      setInfo.setBaseInfo();
+    }
   };
-
 
   handleDelete = () => {
     const {
       dispatch,
-      recipes: { selectedRows },
+      acupoint: { selectedRows },
     } = this.props;
     let Ids = [];
     selectedRows.map(item => {
       Ids.push(item.Id);
     });
     dispatch({
-      type: 'recipes/removeData',
+      type: 'acupoint/removeData',
       payload: {
         Ids: Ids,
       },
       callback: () => {
         dispatch({
-          type: 'recipes/setStates',
+          type: 'acupoint/setStates',
           payload: {
             selectedRows: [],
           },
         });
         dispatch({
-          type: 'recipes/queryData',
+          type: 'acupoint/queryData',
           payload: {},
         });
       },
@@ -267,13 +337,13 @@ class Recipes extends PureComponent {
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
-      recipes: { selectedRows },
+      acupoint: { selectedRows },
     } = this.props;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row type="flex" justify="space-between">
           <Col md={8} lg={8} xl={8}>
-            <Button icon="plus" type="primary" onClick={() => this.editDoctor()}>
+            <Button icon="plus" type="primary" onClick={() => this.setModalVisible(true)}>
               新建
             </Button>
             {selectedRows && selectedRows.length > 0 && (
@@ -303,7 +373,7 @@ class Recipes extends PureComponent {
 
   render() {
     const {
-      recipes: { showSource, selectedRows, dataSource, pageSize, current },
+      acupoint: { showSource, selectedRows, dataSource, pageSize, current },
       loading,
     } = this.props;
     const data = {
@@ -330,10 +400,10 @@ class Recipes extends PureComponent {
             />
           </div>
         </Card>
-        <VideoMana {...this.props} />
+        <EditModal {...this.props} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default Recipes;
+export default Acupoint;

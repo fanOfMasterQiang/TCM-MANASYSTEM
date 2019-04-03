@@ -8,7 +8,15 @@ for (let i = 0; i < 12; i += 1) {
     Type:Math.round(Math.random() * 4) + 1,
     Image: "../assets/logo.svg",
     Practice: '煎炒烹炸',
-    Video: '',
+    VideoSource: {
+      Id: `vde-${1000 + i}`,
+      GroupType: 1,
+      Title: ``,
+      Abstract: ``,
+      Description: ``,
+      Url: `../../video.mp4`,
+      AcupointId: ``,
+    },
     Material:"材料一：50g;材料二：50g;材料三：50g"
   });
 }

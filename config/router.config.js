@@ -195,6 +195,25 @@ export default [
           },
         ],
       },
+      // acupoint
+      {
+        path: '/acupoint',
+        icon: 'form',
+        name: 'acupoint',
+        routes: [
+          {
+            path: '/acupoint/index',
+            name: 'acupoint',
+            component: './Acupoint/Acupoint',
+          },
+          {
+            path: '/acupoint/acupointVideo',
+            name: 'acupointVideo',
+            hideInMenu: true,
+            component: './Acupoint/AcupointVideo',
+          },
+        ],
+      },
       {
         component: '404',
       },
