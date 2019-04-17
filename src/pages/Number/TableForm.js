@@ -75,7 +75,7 @@ class TableForm extends PureComponent {
     } else {
       dispatch({
         type: 'advanced/delNumbers',
-        payload: { Id: key },
+        payload: { Ids: [key] },
         callback: () => {
           dispatch({
             type: 'advanced/queryNumbers',

@@ -39,10 +39,6 @@ const checkStatus = response => {
 };
 
 const cachedSave = (response, hashcode) => {
-  /**
-   * Clone a response data and store it in sessionStorage
-   * Does not support data other than json, Cache only json
-   */
   const contentType = response.headers.get('Content-Type');
   if (contentType && contentType.match(/application\/json/i)) {
     // All data is saved as text
@@ -114,6 +110,7 @@ export default function request(url, option) {
     }
   }
 
+
   const expirys = options.expirys && 60;
   // options.expirys !== false, return the cache,
   if (options.expirys !== false) {
@@ -130,7 +127,7 @@ export default function request(url, option) {
     }
   }
   const timeOut = new Promise((resolve,reject)=> {
-    setTimeout(() => reject(new Error('Request_Timeout')),newOptions.timeOut || 5000);
+    setTimeout(() => reject(new Error('Request_Timeout')),newOptions.timeOut || 99999);
   });
 
   return Promise.race([fetch(url, newOptions),timeOut])
@@ -159,18 +156,18 @@ export default function request(url, option) {
         return;
       }
       // environment should not be used
-      if (status === 403) {
-        router.push('/exception/403');
-        return;
-      }
-      if (status <= 504 && status >= 500) {
-        router.push('/exception/500');
-        return;
-      }
-      if (status >= 404 && status < 422) {
-        router.push('/exception/404');
-        return;
-      }
+      // if (status === 403) {
+      //   router.push('/exception/403');
+      //   return;
+      // }
+      // if (status <= 504 && status >= 500) {
+      //   router.push('/exception/500');
+      //   return;
+      // }
+      // if (status >= 404 && status < 422) {
+      //   router.push('/exception/404');
+      //   return;
+      // }
       message.error("请求出现错误！")
     });
 }

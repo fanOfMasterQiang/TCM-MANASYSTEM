@@ -1,4 +1,4 @@
-import { queryNumber, changeNumber, delNumber, addNumber } from '@/services/admin/admin';
+import {  changeNumber, delNumber, addNumber,queryAll } from '@/services/admin/admin';
 
 export default {
   namespace: 'advanced',
@@ -9,7 +9,7 @@ export default {
 
   effects: {
     *queryNumbers({ payload }, { call, put }) {
-      const response = yield call(queryNumber, payload);
+      const response = yield call(queryAll, payload);
       yield put({
         type: 'saveNumber',
         payload: response.Data,
