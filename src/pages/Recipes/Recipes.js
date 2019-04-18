@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button, message,Modal,Upload } from 'antd';
+import { Row, Col, Card, Form, Input, Button, message,Modal,Upload,Icon } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
+import $ from "jquery";
 import Config from '@/services/config';
 
 import styles from './Recipes.less';
@@ -11,10 +12,19 @@ import styles from './Recipes.less';
 const FormItem = Form.Item;
 FormItem.className = styles['ant-form-item'];
 
-const VideoMana = (props => {
-  const { recipes:{Item, modalVisible},dispatch} = props;
+@connect(({ recipes, loading }) => ({
+  recipes,
+  loading: loading.models.recipes,
+}))
+@Form.create()
+class VideoMana extends React.PureComponent{
+  state = {
+    fileList:[],
+    uploading:false,
+  };
 
-  const closeModal = () => {
+  closeModal = () => {
+    const { dispatch,} = this.props;
     dispatch({
       type: 'recipes/queryData',
       payload: {
@@ -29,33 +39,10 @@ const VideoMana = (props => {
     });
   };
 
-  const beforeUpload = (file) =>{
-    const isVideo = file.type.indexOf('video') !== -1;
-    if (!isVideo) {
-      message.error('You can only upload video file!');
-    }
-    const isLt1G = file.size / 1024 / 1024 < 1024;
-    if (!isLt1G) {
-      message.error('Image must smaller than 1GB!');
-    }
-    return isVideo && isLt1G;
-  };
-
-  const onChange = (info) =>{
-    if (info.file.status === 'done') {
-      if(info.fileList.length > 1){
-        info.fileList.splice(0,1);
-      }
-      message.success(`${info.file.name} file uploaded successfully`);
-    }
-    if (info.file.status === 'error') {
-      message.error(`${info.file.name} file uploaded failed`);
-    }
-  };
-
-  const onRemove = () =>{
+  onRemove = () =>{
+    const { recipes:{Item},dispatch} = this.props;
     dispatch({
-      type: 'recipes/delVideo',
+      type: 'recipes/deleteVideo',
       payload: {
         Id:Item.Id,
       },
@@ -65,7 +52,7 @@ const VideoMana = (props => {
           payload: {
             Item:{
               ...Item,
-              VideoSource:null
+              Url:null
             },
           },
         });
@@ -73,48 +60,110 @@ const VideoMana = (props => {
     });
   };
 
+  handleUpload = () => {
+    const { recipes:{Item},dispatch} = this.props;
+    const { fileList } = this.state;
+    const self = this;
+    let form = new FormData();
+    form.append("Id", Item.Id);
+    form.append("", fileList[0]);
+    let data =form;
+    self.setState({uploading:true});
+    $.ajax({
+      url: `${Config.service}/api/Recipes/upload`,
+      data: data,
+      type: "Post",
+      dataType: "json",
+      cache: false,
+      processData: false,
+      contentType: false,
+      success: function (result) {
+        if(result.Success){
+          dispatch({
+            type: 'recipes/getRecipe',
+            payload: {
+              Id:Item.Id
+            },
+          });
+          self.setState({uploading:false,fileList:[]});
+          message.success("上传成功")
+        }else {
+          self.setState({uploading:false});
+          message.error("上传失败")
+        }
+      }
+    })
+  };
 
-  return (
-    <Modal
-      centered
-      destroyOnClose
-      closable={false}
-      cancelButtonProps={{disabled:true}}
-      width={640}
-      title="视频管理"
-      visible={modalVisible}
-      onOk={()=>closeModal()}
-      onCancel={() => closeModal()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
-        <div onClick={()=>onRemove()}>
-          <Upload
-            name="topicImg"
-            multiple={false}
-            accept=".mp4,.wmv,.avi"
-            className="topic-insertImg"
-            action={`${Config.service}/api/Recipes/upload`}
-            data={{Id:Item.Id}}
-            fileList={Item.VideoSource?[{
-              uid: 'uid',
-              name: Item.VideoSource.Url,
-              status: 'done',
-              response: '{"status": "success"}',
-              linkProps: '{"download": "image"}',
-            },]:null}
-            beforeUpload={(file)=>beforeUpload(file)}
-            onChange={info => onChange(info)}
-            onRemove={() => onRemove()}
-          >
-            <Button>
-              <span>选择视频</span>
+  render(){
+    const { recipes:{Item,modalVisible}} = this.props;
+    const { fileList,uploading } = this.state;
+    const self = this;
+    const uploadProps = {
+      name: 'topicImg',
+      multiple:false,
+      accept:".mp4,.wmv,.avi",
+      className:"topic-insertImg",
+      showUploadList:false,
+      fileList:[],
+      beforeUpload(v){
+        const isVideo = v.type.indexOf('video') !== -1;
+        if (!isVideo) {
+          message.error('You can only upload video file!');
+        }
+        const isLt1G = v.size / 1024 / 1024 < 1024;
+        if (!isLt1G) {
+          message.error('Image must smaller than 1GB!');
+        }
+        if(isVideo && isLt1G){
+          self.setState(() => ({
+            fileList: [v],
+          }));
+        }
+        return false;
+      },
+    };
+    return (
+      <Modal
+        centered
+        destroyOnClose
+        closable={false}
+        cancelButtonProps={{disabled:true}}
+        width={640}
+        title="视频管理"
+        visible={modalVisible}
+        onOk={()=>this.closeModal()}
+        onCancel={() => this.closeModal()}
+      >
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频地址">
+          <span>{Item && Item.Url}</span>
+          {Item && Item.Url && <Icon type="delete" style={{marginLeft:10,fontSize:18}} onClick={()=>this.onRemove()} />}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
+          <div>
+            <Upload {...uploadProps}>
+              <Button>
+                <Icon type="upload" /> Select File
+              </Button>
+            </Upload>
+          </div>
+          <span>{fileList[0] && fileList[0].name}</span>
+          <div>
+            <Button
+              type="primary"
+              onClick={this.handleUpload}
+              disabled={fileList && fileList.length === 0}
+              loading={uploading}
+              style={{ marginTop: 16 }}
+            >
+              {uploading ? 'Uploading' : 'Start Upload' }
             </Button>
-          </Upload>
-        </div>
-      </FormItem>
-    </Modal>
-  );
-});
+          </div>
+        </FormItem>
+      </Modal>
+    )
+  }
+}
 
 
 /* eslint react/no-multi-comp:0 */
@@ -327,7 +376,7 @@ class Recipes extends PureComponent {
 
   render() {
     const {
-      recipes: { showSource, selectedRows, dataSource, pageSize, current },
+      recipes: { showSource, selectedRows, dataSource, pageSize, current, modalVisible },
       loading,
     } = this.props;
     const data = {
@@ -354,7 +403,7 @@ class Recipes extends PureComponent {
             />
           </div>
         </Card>
-        <VideoMana {...this.props} />
+        {modalVisible && <VideoMana {...this.props} />}
       </PageHeaderWrapper>
     );
   }

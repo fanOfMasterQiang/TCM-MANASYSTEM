@@ -1,4 +1,4 @@
-import { queryKey, delRecipe,delVideo } from '@/services/recipes/recipes';
+import { queryKey, delRecipe,delVideo,upload,queryRecipe } from '@/services/recipes/recipes';
 
 export default {
   namespace: 'recipes',
@@ -18,8 +18,8 @@ export default {
       Type: 0,
       Image: '',
       Practice: '',
-      VideoSource: '',
-      Materials: [],
+      Url: '',
+      Materials: "",
     },
   },
 
@@ -37,12 +37,27 @@ export default {
         });
       }
     },
+    *getRecipe({ payload }, { call, put }) {
+      const response = yield call(queryRecipe, payload);
+      if (response.Success) {
+        yield put({
+          type: 'set',
+          payload: {
+            Item:response.Data
+          },
+        });
+      }
+    },
     *removeData({ payload, callback }, { call }) {
       yield call(delRecipe, payload);
       if (callback) callback();
     },
-    *delVideo({ payload, callback }, { call }) {
+    *deleteVideo({ payload, callback }, { call }) {
       yield call(delVideo, payload);
+      if (callback) callback();
+    },
+    *uploadVideo({ payload, callback }, { call }) {
+      yield call(upload, payload);
       if (callback) callback();
     },
     *setStates({ payload, callback }, { put }) {

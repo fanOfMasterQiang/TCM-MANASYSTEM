@@ -57,9 +57,9 @@ const ManaForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      Item.Name = fieldsValue.Name;
+      Item.UserName = fieldsValue.UserName;
       Item.Phone = fieldsValue.Phone;
-      Item.Password = fieldsValue.Password;
+      Item.UserPwd = fieldsValue.UserPwd;
       if(Item.Id === ""){
         dispatch({
           type: 'page/addData',
@@ -111,9 +111,9 @@ const ManaForm = Form.create()(props => {
 
   const bornChange = (value) =>{
     if(value){
-      Item.Born = value.format("YYYY-MM-DD")
+      Item.Birthday = value.format("YYYY-MM-DD")
     }else {
-      Item.Born = ''
+      Item.Birthday = ''
     }
   };
 
@@ -173,7 +173,7 @@ const ManaForm = Form.create()(props => {
       onCancel={() => handleCancel()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('Name', {
+        {form.getFieldDecorator('UserName', {
           rules: [{ required: true, message: '请输入姓名！', min: 1 }],
         })(<Input placeholder="请输入姓名" />)}
       </FormItem>
@@ -188,7 +188,7 @@ const ManaForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="出生日期">
         <DatePicker
-          defaultValue={Item.Born?moment(Item.Born,'YYYY-MM-DD'):moment(new Date())}
+          defaultValue={Item.Birthday?moment(Item.Birthday,'YYYY-MM-DD'):moment(new Date())}
           placeholder="请选择患者出生日期"
           onChange={value => bornChange(value)}
         />
@@ -199,7 +199,7 @@ const ManaForm = Form.create()(props => {
         })(<Input placeholder="请输入手机号" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('Password', {
+        {form.getFieldDecorator('UserPwd', {
           rules: [{required: true,max:18,min:6, message: '请输入6-8位密码！'}],
         })(<Input.Password placeholder="请输入6-8位密码" />)}
       </FormItem>
@@ -215,7 +215,7 @@ const ManaForm = Form.create()(props => {
           <Upload
             name="topicImg"
             multiple={false}
-            accept=".jpg,.jpeg,.png"
+            accept=".jpg,.jpeg"
             className="topic-insertImg"
             action=""
             beforeUpload={(file)=>beforeUpload(file)}
@@ -243,7 +243,7 @@ class RelateForm extends PureComponent {
   columns1= [
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       align: 'center',
     },
     {
@@ -255,8 +255,8 @@ class RelateForm extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Birthday',
       align: 'center',
     },
     {
@@ -277,7 +277,7 @@ class RelateForm extends PureComponent {
   columns2=[
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       align: 'center',
     },
     {
@@ -289,8 +289,8 @@ class RelateForm extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Birthday',
       align: 'center',
     },
     {
@@ -466,7 +466,7 @@ class pageList extends PureComponent {
   columns = [
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       width: '20%',
       render:(text,record)=>
         <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>{text}</a>
@@ -481,7 +481,7 @@ class pageList extends PureComponent {
     },
     {
       title: '出生日期',
-      dataIndex: 'Born',
+      dataIndex: 'Birthday',
       width: '20%',
     },
     {

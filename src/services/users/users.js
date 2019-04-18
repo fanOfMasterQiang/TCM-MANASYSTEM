@@ -1,21 +1,27 @@
 import { stringify } from 'qs';
-// import Config from '../config';
+import Config from '../config';
 import request from '@/utils/request';
 
-export async function queryUsers(params) {
-  return request(`/api/user/query?${stringify(params)}`,{
+export async function queryUsers() {
+  return request(`${Config.service}/api/UserInfos/getAll?}`,{
+    expirys:false
+  });
+}
+
+export async function queryUser(params) {
+  return request(`${Config.service}/api/UserInfos/getById?${stringify(params)}`,{
     expirys:false
   });
 }
 
 export async function queryKey(params) {
-  return request(`/api/user/key?${stringify(params)}`,{
+  return request(`${Config.service}/api/UserInfos/getByName?${stringify(params)}`,{
     expirys:false
   });
 }
 
 export async function addUser(params) {
-  return request(`/api/user/add`,{
+  return request(`${Config.service}/api/UserInfos/add`,{
     method: 'POST',
     body: {
       ...params,
@@ -27,7 +33,7 @@ export async function addUser(params) {
 }
 
 export async function changeUser(params) {
-  return request(`/api/user/change`,{
+  return request(`${Config.service}/api/UserInfos/update`,{
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +45,7 @@ export async function changeUser(params) {
 }
 
 export async function delUser(params) {
-  return request(`/api/user/del`,{
+  return request(`${Config.service}/api/UserInfos/deteByIds`,{
     method: 'POST',
     body: {
       ...params,
@@ -54,19 +60,19 @@ export async function delUser(params) {
 
 
 export async function queryRelate(params) {
-  return request(`/api/user/queryRelate?${stringify(params)}`,{
+  return request(`${Config.service}/api/UserInfos/getRelateUser?${stringify(params)}`,{
     expirys:false
   });
 }
 
 export async function queryRest(params) {
-  return request(`/api/user/queryRest?${stringify(params)}`,{
+  return request(`${Config.service}/api/UserInfos/getRestUser?${stringify(params)}`,{
     expirys:false
   });
 }
 
 export async function changeRelate(params) {
-  return request(`/api/user/changeRelate`,{
+  return request(`${Config.service}/api/FamilyRelates/update`,{
     method: 'POST',
     body: {
       ...params,
