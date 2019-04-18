@@ -142,7 +142,9 @@ class Doctor extends PureComponent {
         Doctor:{...record}
       },
     });
-    router.push(`/nearby/doctorInfo?Id=${record.Id}`);
+    record?
+    router.push(`/nearby/doctorInfo?Id=${record.Id}`):
+    router.push(`/nearby/doctorInfo`)
   };
 
   handleDelete = () => {

@@ -1,21 +1,27 @@
 import { stringify } from 'qs';
-// import Config from '../config';
+import Config from '../config';
 import request from '@/utils/request';
 
+export async function queryAll() {
+  return request(`${Config.service}/api/DoctorInfoes/getAll`, {
+    expirys: false,
+  });
+}
+
 export async function queryDoctor(params) {
-  return request(`/api/doctor/query?${stringify(params)}`, {
+  return request(`${Config.service}/api/DoctorInfoes/getById?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function queryKey(params) {
-  return request(`/api/doctor/key?${stringify(params)}`, {
+  return request(`${Config.service}/api/DoctorInfoes/getByName?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function addDoctor(params) {
-  return request(`/api/doctor/add`, {
+  return request(`${Config.service}/api/DoctorInfoes/add`, {
     method: 'POST',
     body: {
       ...params,
@@ -27,7 +33,7 @@ export async function addDoctor(params) {
 }
 
 export async function changeDoctor(params) {
-  return request(`/api/doctor/change`, {
+  return request(`${Config.service}/api/DoctorInfoes/update`, {
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +45,7 @@ export async function changeDoctor(params) {
 }
 
 export async function delDoctor(params) {
-  return request(`/api/doctor/del`, {
+  return request(`${Config.service}/api/DoctorInfoes/deteByIds`, {
     method: 'POST',
     body: {
       ...params,

@@ -1,21 +1,27 @@
 import { stringify } from 'qs';
-// import Config from '../config';
+import Config from '../config';
 import request from '@/utils/request';
 
 export async function queryAcupoint(params) {
-  return request(`/api/acupoint/query?${stringify(params)}`, {
+  return request(`${Config.service}/api/Acupoints/getById?${stringify(params)}`, {
+    expirys: false,
+  });
+}
+
+export async function queryAll() {
+  return request(`${Config.service}/api/Acupoints/getAll`, {
     expirys: false,
   });
 }
 
 export async function queryKey(params) {
-  return request(`/api/acupoint/key?${stringify(params)}`, {
+  return request(`${Config.service}/api/Acupoints/getByName?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function addAcupoint(params) {
-  return request(`/api/acupoint/add`, {
+  return request(`${Config.service}/api/Acupoints/add`, {
     method: 'POST',
     body: {
       ...params,
@@ -27,7 +33,7 @@ export async function addAcupoint(params) {
 }
 
 export async function changeAcupoint(params) {
-  return request(`/api/acupoint/change`, {
+  return request(`${Config.service}/api/Acupoints/update`, {
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +45,7 @@ export async function changeAcupoint(params) {
 }
 
 export async function delAcupoint(params) {
-  return request(`/api/acupoint/del`, {
+  return request(`${Config.service}/api/Acupoints/deteByIds`, {
     method: 'POST',
     body: {
       ...params,

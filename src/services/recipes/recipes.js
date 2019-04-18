@@ -1,21 +1,21 @@
 import { stringify } from 'qs';
-// import Config from '../config';
+import Config from '../config';
 import request from '@/utils/request';
 
 export async function queryRecipe(params) {
-  return request(`/api/recipe/query?${stringify(params)}`, {
+  return request(`${Config.service}/api/Recipes/getById?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function queryKey(params) {
-  return request(`/api/recipe/key?${stringify(params)}`, {
+  return request(`${Config.service}/api/Recipes/getByName?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function addRecipe(params) {
-  return request(`/api/recipe/add`, {
+  return request(`${Config.service}/api/Recipes/add`, {
     method: 'POST',
     body: {
       ...params,
@@ -27,7 +27,7 @@ export async function addRecipe(params) {
 }
 
 export async function changeRecipe(params) {
-  return request(`/api/recipe/change`, {
+  return request(`${Config.service}/api/Recipes/update`, {
     method: 'POST',
     body: {
       ...params,
@@ -39,7 +39,7 @@ export async function changeRecipe(params) {
 }
 
 export async function delRecipe(params) {
-  return request(`/api/recipe/del`, {
+  return request(`${Config.service}/api/Recipes/deteByIds`, {
     method: 'POST',
     body: {
       ...params,
@@ -52,7 +52,7 @@ export async function delRecipe(params) {
 
 
 export async function upload(params) {
-  return request(`/api/recipe/upload`, {
+  return request(`${Config.service}/api/Recipes/upload`, {
     method: 'POST',
     body: {
       ...params,
@@ -65,7 +65,7 @@ export async function upload(params) {
 }
 
 export async function delVideo(params) {
-  return request(`/api/recipe/delVideo`, {
+  return request(`${Config.service}/api/Recipes/deleteVideo`, {
     method: 'POST',
     body: {
       ...params,

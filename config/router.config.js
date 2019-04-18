@@ -139,24 +139,26 @@ export default [
           },
         ],
       },
+
       // diagnosis
-      {
-        path: '/diagnosis',
-        icon: 'table',
-        name: 'diagnosis',
-        routes: [
-          {
-            path: '/diagnosis/syndrome',
-            name: 'syndrome',
-            component: './Diagnosis/syndrome',
-          },
-          {
-            path: '/diagnosis/symptom',
-            name: 'symptom',
-            component: './Diagnosis/symptom',
-          },
-        ],
-      },
+      // {
+      //   path: '/diagnosis',
+      //   icon: 'table',
+      //   name: 'diagnosis',
+      //   routes: [
+      //     {
+      //       path: '/diagnosis/syndrome',
+      //       name: 'syndrome',
+      //       component: './Diagnosis/syndrome',
+      //     },
+      //     {
+      //       path: '/diagnosis/symptom',
+      //       name: 'symptom',
+      //       component: './Diagnosis/symptom',
+      //     },
+      //   ],
+      // },
+
       // nearby
       {
         path: '/nearby',

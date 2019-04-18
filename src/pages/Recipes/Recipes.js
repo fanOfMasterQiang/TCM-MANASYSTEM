@@ -4,6 +4,7 @@ import { Row, Col, Card, Form, Input, Button, message,Modal,Upload } from 'antd'
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
+import Config from '@/services/config';
 
 import styles from './Recipes.less';
 
@@ -17,7 +18,7 @@ const VideoMana = (props => {
     dispatch({
       type: 'recipes/queryData',
       payload: {
-        modalVisible:false,
+        Key:""
       },
     });
     dispatch({
@@ -56,7 +57,7 @@ const VideoMana = (props => {
     dispatch({
       type: 'recipes/delVideo',
       payload: {
-        RecipeId:Item.Id,
+        Id:Item.Id,
       },
       callback:()=>{
         dispatch({
@@ -92,7 +93,8 @@ const VideoMana = (props => {
             multiple={false}
             accept=".mp4,.wmv,.avi"
             className="topic-insertImg"
-            action=""
+            action={`${Config.service}/api/Recipes/upload`}
+            data={{Id:Item.Id}}
             fileList={Item.VideoSource?[{
               uid: 'uid',
               name: Item.VideoSource.Url,
@@ -125,16 +127,16 @@ class Recipes extends PureComponent {
   columns = [
     {
       title: '菜名',
-      dataIndex: 'Name',
+      dataIndex: 'Title',
       width: '30%',
     },
     {
       title: '类型',
-      dataIndex: 'Title',
+      dataIndex: 'GroupName',
       width: '30%',
       render: (text, record) => {
         let title = '';
-        switch (record.Type) {
+        switch (record.GroupName-0) {
           case 1:
             title = '家常菜';
             break;
@@ -239,7 +241,9 @@ class Recipes extends PureComponent {
         Recipes:{...record}
       },
     });
-    router.push(`/recipes/recipeInfo?Id=${record.Id}`);
+    record?
+    router.push(`/recipes/recipeInfo?Id=${record.Id}`):
+    router.push(`/recipes/recipeInfo`);
   };
 
   editRecipeVideo = async record => {
@@ -293,7 +297,7 @@ class Recipes extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row type="flex" justify="space-between">
           <Col md={8} lg={8} xl={8}>
-            <Button icon="plus" type="primary" onClick={() => this.editDoctor()}>
+            <Button icon="plus" type="primary" onClick={() => this.editRecipes()}>
               新建
             </Button>
             {selectedRows && selectedRows.length > 0 && (

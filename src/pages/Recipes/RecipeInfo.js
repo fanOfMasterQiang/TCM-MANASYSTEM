@@ -11,7 +11,7 @@ const {Option} = Select;
 
 const ClearItem = {
   Id: '',
-  Name: '',
+  Title: '',
   Type: 0,
   Image: '',
   Practice: '',
@@ -55,7 +55,7 @@ class RecipeInfo extends PureComponent {
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        Recipes.Name = values.Name;
+        Recipes.Title = values.Title;
         Recipes.Practice = values.Practice;
         Recipes.Material = values.Material;
         dispatch({
@@ -136,7 +136,7 @@ class RecipeInfo extends PureComponent {
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label="菜名">
-              {getFieldDecorator('Name', {
+              {getFieldDecorator('Title', {
                 rules: [
                   {
                     required: true,
@@ -147,9 +147,9 @@ class RecipeInfo extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label="类型">
               <Select
-                defaultValue={Recipes.Type || 1}
+                defaultValue={Recipes.GroupName || 1}
                 onChange={value => {
-                  Recipes.Type = value;
+                  Recipes.GroupName = value;
                 }}
               >
                 <Option value={1}>家常菜</Option>

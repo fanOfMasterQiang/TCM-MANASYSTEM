@@ -5,6 +5,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Ellipsis from '@/components/Ellipsis';
 import router from 'umi/router';
+import Config from '@/services/config';
 import styles from './Acupoint.less';
 
 
@@ -147,7 +148,7 @@ const EditModal = (props => {
             (<img
               alt="ex"
               className={styles.image}
-              src={Item.Image}
+              src={`${Config.service}${Item.Image}`}
             />)
             :null}
           <Upload

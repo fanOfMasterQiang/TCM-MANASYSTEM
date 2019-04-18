@@ -14,7 +14,7 @@ export default {
     selectedRows: [],
     Item: {
       Id: '',
-      Name: '',
+      Title: '',
       Type: 0,
       Image: '',
       Practice: '',
