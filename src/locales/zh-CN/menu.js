@@ -16,6 +16,14 @@ export default {
   'menu.nearby.doctor': '医生',
   'menu.nearby.doctorInfo': '医生信息',
 
+  'menu.recipes': '食谱',
+  'menu.recipes.recipes': '食谱',
+  'menu.recipes.recipeInfo': '食谱信息',
+
+  'menu.acupoint': '穴位',
+  'menu.acupoint.acupoint': '穴位管理',
+  'menu.acupoint.acupointVideo': '穴位视频',
+
   'menu.number': '成员',
   'menu.number.advancedform': '成员管理',
 

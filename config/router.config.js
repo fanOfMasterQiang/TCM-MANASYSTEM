@@ -5,7 +5,7 @@ export default [
     component: '../layouts/UserLayout',
     routes: [
       { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', name: 'login', component: './User/Login' },
+      { path: '/user/login', name: 'login', component: './Login/Login' },
       {
         component: '404',
       },
@@ -134,28 +134,31 @@ export default [
           {
             path: '/users/info',
             name: 'userInfo',
+            hideInMenu: true,
             component: './Users/userInfo',
           },
         ],
       },
+
       // diagnosis
-      {
-        path: '/diagnosis',
-        icon: 'table',
-        name: 'diagnosis',
-        routes: [
-          {
-            path: '/diagnosis/syndrome',
-            name: 'syndrome',
-            component: './Diagnosis/syndrome',
-          },
-          {
-            path: '/diagnosis/symptom',
-            name: 'symptom',
-            component: './Diagnosis/symptom',
-          },
-        ],
-      },
+      // {
+      //   path: '/diagnosis',
+      //   icon: 'table',
+      //   name: 'diagnosis',
+      //   routes: [
+      //     {
+      //       path: '/diagnosis/syndrome',
+      //       name: 'syndrome',
+      //       component: './Diagnosis/syndrome',
+      //     },
+      //     {
+      //       path: '/diagnosis/symptom',
+      //       name: 'symptom',
+      //       component: './Diagnosis/symptom',
+      //     },
+      //   ],
+      // },
+
       // nearby
       {
         path: '/nearby',
@@ -170,7 +173,46 @@ export default [
           {
             path: '/nearby/doctorInfo',
             name: 'doctorInfo',
+            hideInMenu: true,
             component: './NearBy/DoctorInfo',
+          },
+        ],
+      },
+      // recipes
+      {
+        path: '/recipes',
+        icon: 'form',
+        name: 'recipes',
+        routes: [
+          {
+            path: '/recipes/index',
+            name: 'recipes',
+            component: './Recipes/Recipes',
+          },
+          {
+            path: '/recipes/recipeInfo',
+            name: 'recipeInfo',
+            hideInMenu: true,
+            component: './Recipes/RecipeInfo',
+          },
+        ],
+      },
+      // acupoint
+      {
+        path: '/acupoint',
+        icon: 'form',
+        name: 'acupoint',
+        routes: [
+          {
+            path: '/acupoint/index',
+            name: 'acupoint',
+            component: './Acupoint/Acupoint',
+          },
+          {
+            path: '/acupoint/acupointVideo',
+            name: 'acupointVideo',
+            hideInMenu: true,
+            component: './Acupoint/AcupointVideo',
           },
         ],
       },

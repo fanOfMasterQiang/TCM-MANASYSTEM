@@ -90,9 +90,9 @@ class SecurityView extends Component {
       dispatch({
         type: 'user/changePassword',
         payload: {
-          Id:user.currentUser.Id,
-          PasswordOld,
-          PasswordNew
+          AdminId:user.currentUser.Id,
+          OldPwd:PasswordOld,
+          NewPwd:PasswordNew
         },
         callback:()=>{
           let strength = selfthis.checkStrength(PasswordNew);
@@ -121,7 +121,7 @@ class SecurityView extends Component {
         <Modal
           destroyOnClose
           width={640}
-          title="新增患者"
+          title="修改密码"
           visible={visible}
           onOk={() => this.okHandle()}
           onCancel={() => this.handleCancel()}

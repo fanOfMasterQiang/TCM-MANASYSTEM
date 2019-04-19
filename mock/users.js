@@ -1,4 +1,5 @@
 import { parse } from 'url';
+
 const Format = (d, fmt) => {
   let o = {
     'M+': d.getMonth() + 1, // 月份
@@ -24,9 +25,19 @@ const Format = (d, fmt) => {
 let usersData = [];
 let usersRelate = [];
 for (let i = 0; i < 100; i += 1) {
-  let record = [];
+  let recordXY = [];
+  let recordXT = [];
+  let recordTW = [];
   for (let j = 14; j > 0; j--) {
-    record.push({
+    recordXY.push({
+      x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
+      y: Math.round(Math.random() * 100),
+    });
+    recordXT.push({
+      x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
+      y: Math.round(Math.random() * 100),
+    });
+    recordTW.push({
       x: Format(new Date(new Date().getTime() - j * 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
       y: Math.round(Math.random() * 100),
     });
@@ -34,9 +45,17 @@ for (let i = 0; i < 100; i += 1) {
   usersData.push({
     Id: `uid-${1000 + i}`,
     Name: `user${i}`,
+    Phone:'',
+    Born:Format(new Date(new Date().getTime() - (Math.random()*365*70)* 60 * 60 * 24 * 1000), 'yyyy-MM-dd'),
+    Password:'',
+    Avatar:'',
     Gender: Math.round(Math.random()),
     Age: Math.round(Math.random() * 100),
-    Record: record,
+    Record: {
+      recordXY,
+      recordXT,
+      recordTW
+    },
   });
 }
 
@@ -59,35 +78,36 @@ function getData(req, res) {
   });
   let genderData = [{ x: '男', y: 0 }, { x: '女', y: 0 }];
   usersData.map(item => {
+    let Age = (new Date().getTime() - new Date(item.Born).getTime())/(1000*60*60*24*365);
     switch (true) {
-      case item.Age > 0 && item.Age < 10:
+      case Age > 0 && Age < 10:
         ageCount[0].y++;
         break;
-      case item.Age > 10 && item.Age < 20:
+      case Age > 10 && Age < 20:
         ageCount[1].y++;
         break;
-      case item.Age > 20 && item.Age < 30:
+      case Age > 20 && Age < 30:
         ageCount[2].y++;
         break;
-      case item.Age > 30 && item.Age < 40:
+      case Age > 30 && Age < 40:
         ageCount[3].y++;
         break;
-      case item.Age > 40 && item.Age < 50:
+      case Age > 40 && Age < 50:
         ageCount[4].y++;
         break;
-      case item.Age > 50 && item.Age < 60:
+      case Age > 50 && Age < 60:
         ageCount[5].y++;
         break;
-      case item.Age > 60 && item.Age < 70:
+      case Age > 60 && Age < 70:
         ageCount[6].y++;
         break;
-      case item.Age > 70 && item.Age < 80:
+      case Age > 70 && Age < 80:
         ageCount[7].y++;
         break;
-      case item.Age > 80 && item.Age < 90:
+      case Age > 80 && Age < 90:
         ageCount[8].y++;
         break;
-      case item.Age > 90 && item.Age < 100:
+      case Age > 90 && Age < 100:
         ageCount[9].y++;
         break;
       default:
@@ -202,17 +222,20 @@ function change(req, res, u, b) {
   }
 
   const body = (b && b.body) || req.body;
-  const { Id, Name, Gender, Age } = body;
+  const { Id, Name, Gender, Born,Avatar } = body;
   if (!Id) {
     result.Message = 'Id不能为空';
     return res.json(result);
   }
-  usersData.map(item => {
+  usersData = usersData.map(item => {
     if (item.Id === Id) {
       result.Success = true;
-      Name && (item.Name = Name);
-      Gender && (item.Gender = Gender - 0);
-      Age && (item.Age = Age - 0);
+      return {
+        ...body,
+        Gender :  Gender - 0,
+      }
+    }else {
+      return item;
     }
   });
 

@@ -1,7 +1,7 @@
-import { queryKey, addUser, changeUser, delUser} from '@/services/users/users';
+import { queryKey, addAcupoint, changeAcupoint, delAcupoint} from '@/services/acupoint/acupoint';
 
 export default {
-  namespace: 'page',
+  namespace: 'acupoint',
 
   state: {
     dataSource:[],
@@ -11,16 +11,13 @@ export default {
     formValues: {},
 
     modalVisible: false,
-    relateModalVisible: false,
     selectedRows: [],
     Item : {
       Id: "",
       Name: "",
-      Gender:0,
-      Phone:'',
-      Born:'',
-      Password:'',
-      Avatar:'',
+      Description:'',
+      Image:'',
+      VideoSource:{},
     },
 
   },
@@ -39,15 +36,15 @@ export default {
       }
     },
     *addData({ payload, callback }, { call }) {
-      yield call(addUser, payload);
+      yield call(addAcupoint, payload);
       if (callback) callback();
     },
     *removeData({ payload, callback }, { call }) {
-      yield call(delUser, payload);
+      yield call(delAcupoint, payload);
       if (callback) callback();
     },
     *updateData({ payload, callback }, { call }) {
-      yield call(changeUser, payload);
+      yield call(changeAcupoint, payload);
       if (callback) callback();
     },
     *setStates({ payload, callback }, { put }) {

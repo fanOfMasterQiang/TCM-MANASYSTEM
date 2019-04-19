@@ -1,4 +1,4 @@
-import { queryNumber,changeNumber,changePwd} from '@/services/admin/admin';
+import { queryNumber,changeProfile,changePwd} from '@/services/admin/admin';
 import {message} from "antd"
 
 export default {
@@ -27,7 +27,7 @@ export default {
       }
     },
     *changeBaseInfo({payload, callback}, { call, put }) {
-      const response = yield call(changeNumber,payload);
+      const response = yield call(changeProfile,payload);
       if(response.Success){
         message.success("修改成功");
         yield put({
@@ -56,7 +56,10 @@ export default {
       localStorage.setItem("userId",action.payload.Id);
       return {
         ...state,
-        currentUser: action.payload || {},
+        currentUser: {
+          ...state.currentUser,
+          ...action.payload
+        },
       };
     },
     // models/global

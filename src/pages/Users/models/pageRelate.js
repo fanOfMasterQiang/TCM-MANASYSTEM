@@ -20,10 +20,8 @@ export default {
     *queryRelate({ payload }, { call, put }) {
       const response = yield call(queryRelate, payload);
       yield put({
-        type: 'set',
-        payload: {
-          relateItem:response.Data || []
-        },
+        type: 'setRelate',
+        payload: response.Data || [],
       });
     },
     *queryRest({ payload, callback }, { call, put }) {
@@ -72,6 +70,18 @@ export default {
       return {
         ...state,
         ...action.payload,
+      };
+    },
+    setRelate(state, {payload}) {
+      console.log(payload)
+      let newRelate =[];
+      let old = payload.slice();
+      old.map(relate =>{
+        newRelate.push(relate.UserInfo)
+      });
+      return {
+        ...state,
+        relateItem:newRelate,
       };
     },
     effRest(state, action) {

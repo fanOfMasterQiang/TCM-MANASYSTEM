@@ -16,15 +16,15 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          status: 'ok',
-          currentAuthority: response.Data.Authority,
-        },
-      });
       // Login successfully
       if (response.Success) {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: {
+            status: 'ok',
+            currentAuthority: response.Data.Authority,
+          },
+        });
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();

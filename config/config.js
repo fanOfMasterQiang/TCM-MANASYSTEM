@@ -76,10 +76,10 @@ export default {
     'primary-color': primaryColor,
   },
   // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
+  //   'api/': {
+  //     target: 'http://10.126.6.118:9091/',
   //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
+  //     pathRewrite: { '^/api': '' },
   //   },
   // },
   ignoreMomentLocale: true,

@@ -11,11 +11,14 @@ import {
   message,
   Table,
   Popconfirm,
-  Radio
+  Radio,
+  DatePicker,
+  Upload,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
+import moment from 'moment';
 
 import styles from './pageList.less';
 
@@ -27,8 +30,12 @@ const ClearItem = {
   Id: "",
   Name: "",
   Gender:0,
-  Age:0
+  Phone:'',
+  Born:'',
+  Password:'',
+  Avatar:'',
 };
+const setInfo ={};
 
 const getValue = obj =>
   Object.keys(obj)
@@ -38,11 +45,21 @@ const getValue = obj =>
 
 const ManaForm = Form.create()(props => {
   const { page:{Item, modalVisible}, form,dispatch} = props;
+
+  setInfo.setBaseInfo =() =>{
+    Object.keys(form.getFieldsValue()).forEach(key => {
+      const obj = {};
+      obj[key] = Item[key] || null;
+      form.setFieldsValue(obj);
+    });
+  };
+
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      Item.Name = fieldsValue.Name;
-      Item.Age = fieldsValue.Age;
+      Item.UserName = fieldsValue.UserName;
+      Item.Phone = fieldsValue.Phone;
+      Item.UserPwd = fieldsValue.UserPwd;
       if(Item.Id === ""){
         dispatch({
           type: 'page/addData',
@@ -92,6 +109,59 @@ const ManaForm = Form.create()(props => {
     });
   };
 
+  const bornChange = (value) =>{
+    if(value){
+      Item.Birthday = value.format("YYYY-MM-DD")
+    }else {
+      Item.Birthday = ''
+    }
+  };
+
+  const beforeUpload = (file) =>{
+    const isJPG = file.type === 'image/jpeg';
+    if (!isJPG) {
+      message.error('You can only upload JPG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJPG && isLt2M;
+  };
+
+  const onChange = (info) =>{
+    if (info.file.status === 'done') {
+      if(info.fileList.length > 1){
+        info.fileList.splice(0,1);
+      }
+      let reader = new FileReader();
+      reader.readAsDataURL(info.file.originFileObj);
+      reader.onload = (event) =>{
+        dispatch({
+          type: 'page/set',
+          payload: {
+            Item: {
+              ...Item,
+              Avatar:event.target.result
+            },
+          },
+        });
+      }
+    }
+  };
+
+  const onRemove = () =>{
+    dispatch({
+      type: 'page/set',
+      payload: {
+        Recipes: {
+          ...Item,
+          Avatar:''
+        },
+      },
+    });
+  };
+
   return (
     <Modal
       centered
@@ -103,14 +173,9 @@ const ManaForm = Form.create()(props => {
       onCancel={() => handleCancel()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('Name', {
+        {form.getFieldDecorator('UserName', {
           rules: [{ required: true, message: '请输入姓名！', min: 1 }],
         })(<Input placeholder="请输入姓名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="年龄">
-        {form.getFieldDecorator('Age', {
-          rules: [{required: true, message: '请输入年龄！'}],
-        })(<Input placeholder="请输入年龄" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
         <RadioGroup
@@ -120,6 +185,48 @@ const ManaForm = Form.create()(props => {
           <Radio value={0}>男</Radio>
           <Radio value={1}>女</Radio>
         </RadioGroup>
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="出生日期">
+        <DatePicker
+          defaultValue={Item.Birthday?moment(Item.Birthday,'YYYY-MM-DD'):moment(new Date())}
+          placeholder="请选择患者出生日期"
+          onChange={value => bornChange(value)}
+        />
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+        {form.getFieldDecorator('Phone', {
+          rules: [{required: true,len:11, message: '请输入手机号！'}],
+        })(<Input placeholder="请输入手机号" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
+        {form.getFieldDecorator('UserPwd', {
+          rules: [{required: true,max:18,min:6, message: '请输入6-8位密码！'}],
+        })(<Input.Password placeholder="请输入6-8位密码" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="头像">
+        <div>
+          {Item.Avatar?
+            (<img
+              alt="ex"
+              className={styles.image}
+              src={Item.Avatar}
+            />)
+            :null}
+          <Upload
+            name="topicImg"
+            multiple={false}
+            accept=".jpg,.jpeg"
+            className="topic-insertImg"
+            action=""
+            beforeUpload={(file)=>beforeUpload(file)}
+            onChange={info => onChange(info)}
+            onRemove={() => onRemove()}
+          >
+            <Button>
+              <span>选择图片</span>
+            </Button>
+          </Upload>
+        </div>
       </FormItem>
     </Modal>
   );
@@ -136,7 +243,7 @@ class RelateForm extends PureComponent {
   columns1= [
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       align: 'center',
     },
     {
@@ -148,8 +255,8 @@ class RelateForm extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Birthday',
       align: 'center',
     },
     {
@@ -170,7 +277,7 @@ class RelateForm extends PureComponent {
   columns2=[
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       align: 'center',
     },
     {
@@ -182,8 +289,8 @@ class RelateForm extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Birthday',
       align: 'center',
     },
     {
@@ -359,10 +466,10 @@ class pageList extends PureComponent {
   columns = [
     {
       title: '姓名',
-      dataIndex: 'Name',
+      dataIndex: 'UserName',
       width: '20%',
       render:(text,record)=>
-        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>text</a>
+        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>{text}</a>
     },
     {
       title: '性别',
@@ -373,8 +480,8 @@ class pageList extends PureComponent {
       }
     },
     {
-      title: '年龄',
-      dataIndex: 'Age',
+      title: '出生日期',
+      dataIndex: 'Birthday',
       width: '20%',
     },
     {
@@ -464,16 +571,19 @@ class pageList extends PureComponent {
     });
   };
 
-  handleModalVisible = (flag, record) => {
+  handleModalVisible = async (flag, record) => {
     let newRecord = Object.assign({},record)
     const { dispatch } = this.props;
-    dispatch({
+    await dispatch({
       type: 'page/setStates',
       payload: {
         modalVisible:!!flag,
         Item:record ? newRecord:ClearItem,
       },
     });
+    if(record){
+      setInfo.setBaseInfo();
+    }
   };
 
   handleDelete = () => {

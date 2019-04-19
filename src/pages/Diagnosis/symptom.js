@@ -22,6 +22,7 @@ const ClearItem = {
   Name: "",
   PinYin:"",
 };
+const setInfo ={};
 
 const getValue = obj =>
   Object.keys(obj)
@@ -31,6 +32,14 @@ const getValue = obj =>
 
 const ManaForm = Form.create()(props => {
   const { symptom:{Item, modalVisible}, form,dispatch} = props;
+  setInfo.setBaseInfo =() =>{
+    Object.keys(form.getFieldsValue()).forEach(key => {
+      const obj = {};
+      obj[key] = Item[key] || null;
+      form.setFieldsValue(obj);
+    });
+  };
+
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -214,16 +223,19 @@ class symptom extends PureComponent {
     });
   };
 
-  handleModalVisible = (flag, record) => {
+  handleModalVisible = async (flag, record) => {
     let newRecord = Object.assign({},record)
     const { dispatch } = this.props;
-    dispatch({
+    await dispatch({
       type: 'symptom/setStates',
       payload: {
         modalVisible:!!flag,
         Item:record ? newRecord:ClearItem,
       },
     });
+    if(record){
+      setInfo.setBaseInfo();
+    }
   };
 
   handleDelete = () => {

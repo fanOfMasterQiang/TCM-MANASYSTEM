@@ -20,7 +20,7 @@ export default {
   },
 
   effects: {
-    *queryInfo({ payload }, { call, put }) {
+    *queryInfo({ payload,callback }, { call, put }) {
       const response = yield call(queryDoctor, payload);
       if (response.Success) {
         yield put({
@@ -29,6 +29,7 @@ export default {
             Doctor: response.Data,
           },
         });
+        if(callback) callback(response.Data)
       }
     },
     *searchSyn({ payload }, { call, put }) {

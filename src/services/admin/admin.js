@@ -1,15 +1,21 @@
 import { stringify } from 'qs';
-// import Config from '../config';
+import Config from '../config';
 import request from '@/utils/request';
 
 export async function queryNumber(params) {
-  return request(`/api/admin/query?${stringify(params)}`,{
+  return request(`${Config.service}/api/Admins/getById?${stringify(params)}`,{
       expirys:false
     });
 }
 
+export async function queryAll() {
+  return request(`${Config.service}/api/Admins/getAll`,{
+    expirys:false
+  });
+}
+
 export async function login(params) {
-  return request(`/api/admin/login`,{
+  return request(`${Config.service}/api/Admins/login`,{
     method: 'POST',
     body: {
       ...params,
@@ -21,7 +27,19 @@ export async function login(params) {
 }
 
 export async function changeNumber(params) {
-  return request(`/api/admin/change`,{
+  return request(`${Config.service}/api/Admins/update`,{
+    method: 'POST',
+    body: {
+      ...params,
+    },
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+  });
+}
+
+export async function changeProfile(params) {
+  return request(`${Config.service}/api/Admins/change`,{
     method: 'POST',
     body: {
       ...params,
@@ -33,7 +51,7 @@ export async function changeNumber(params) {
 }
 
 export async function changePwd(params) {
-  return request(`/api/admin/changePwd`,{
+  return request(`${Config.service}/api/Admins/changePwd`,{
     method: 'POST',
     body: {
       ...params,
@@ -45,7 +63,7 @@ export async function changePwd(params) {
 }
 
 export async function delNumber(params) {
-  return request(`/api/admin/del`,{
+  return request(`${Config.service}/api/Admins/deteByIds`,{
     method: 'POST',
     body: {
       ...params,
@@ -53,11 +71,12 @@ export async function delNumber(params) {
     headers:{
       "Content-Type":"application/x-www-form-urlencoded"
     },
+    traditional:true
   });
 }
 
 export async function addNumber(params) {
-  return request(`/api/admin/add`,{
+  return request(`${Config.service}/api/Admins/add`,{
     method: 'POST',
     body: {
       ...params,

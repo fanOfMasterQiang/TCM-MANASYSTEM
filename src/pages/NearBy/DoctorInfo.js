@@ -9,7 +9,7 @@ import router from 'umi/router';
 const { Events } = Base;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const Option = Select.Option;
+const {Option} = Select;
 
 const ClearItem = {
   Id: '',
@@ -29,16 +29,26 @@ const ClearItem = {
 }))
 @Form.create()
 class DoctorInfo extends PureComponent {
+
   componentDidMount() {
-    const { dispatch, location } = this.props;
-    if (location.query.Id) {
-      dispatch({
-        type: 'doctorInfo/queryInfo',
-        payload: {
-          Id: location.query.Id,
-        },
+    const { form,doctorInfo:{Doctor}} = this.props;
+    if(Doctor.Id){
+      Object.keys(form.getFieldsValue()).forEach(key => {
+        const obj = {};
+        obj[key] = Doctor[key] || null;
+        form.setFieldsValue(obj);
       });
     }
+  }
+
+  componentWillUnmount(){
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'doctorInfo/setStates',
+      payload: {
+        Doctor: ClearItem,
+      },
+    });
   }
 
   handleSubmit = e => {
@@ -56,12 +66,6 @@ class DoctorInfo extends PureComponent {
           type: Doctor.Id ? 'doctorInfo/changeItem' : 'doctorInfo/addItem',
           payload: { ...Doctor },
           callback: () => {
-            dispatch({
-              type: 'doctorInfo/setStates',
-              payload: {
-                Doctor: ClearItem,
-              },
-            });
             router.go(-1);
           },
         });
@@ -217,7 +221,7 @@ class DoctorInfo extends PureComponent {
                 </Map>
               </div>
             </FormItem>
-            <FormItem {...formItemLayout} label="擅长">
+            {/* <FormItem {...formItemLayout} label="擅长">
               <List
                 style={{ height: 300 }}
                 dataSource={Doctor.GoodAt}
@@ -250,7 +254,7 @@ class DoctorInfo extends PureComponent {
                   );
                 }}
               />
-            </FormItem>
+            </FormItem> */}
             <FormItem style={{ marginTop: 50 }}>
               <div align="center">
                 <Button type="primary" htmlType="submit">
