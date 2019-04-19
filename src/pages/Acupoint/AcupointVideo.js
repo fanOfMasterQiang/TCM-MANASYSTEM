@@ -6,7 +6,6 @@ import Config from '@/services/config';
 import $ from "jquery";
 // import router from 'umi/router';
 
-import styles from './AcupointVideo.less';
 
 const FormItem = Form.Item;
 
@@ -94,7 +93,7 @@ class ManaForm extends React.PureComponent{
   };
 
   render(){
-    const { acuVideo:{Item, modalVisible },form} = this.props;
+    const { acuVideo:{ modalVisible },form} = this.props;
     const { fileList,uploading } = this.state;
     const self = this;
     const uploadProps = {
