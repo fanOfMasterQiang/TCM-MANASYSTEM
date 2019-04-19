@@ -256,6 +256,7 @@ class TableForm extends PureComponent {
     return (
       <Fragment>
         <Table
+          rowKey="Id"
           loading={loading}
           columns={columns}
           dataSource={data}

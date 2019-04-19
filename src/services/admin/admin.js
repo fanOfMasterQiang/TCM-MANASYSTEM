@@ -38,6 +38,18 @@ export async function changeNumber(params) {
   });
 }
 
+export async function changeProfile(params) {
+  return request(`${Config.service}/api/Admins/change`,{
+    method: 'POST',
+    body: {
+      ...params,
+    },
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+  });
+}
+
 export async function changePwd(params) {
   return request(`${Config.service}/api/Admins/changePwd`,{
     method: 'POST',

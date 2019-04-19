@@ -238,7 +238,7 @@ class AcupointVideo extends PureComponent {
       acuVideo: { dataSource },
     } = this.props;
     return (
-      <PageHeaderWrapper title="食谱编辑" content="食谱编辑">
+      <PageHeaderWrapper title="视频管理" content="视频管理">
         <Card bordered={false}>
           <List
             footer={

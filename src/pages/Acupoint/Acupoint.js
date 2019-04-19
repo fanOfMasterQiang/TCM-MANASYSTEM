@@ -358,7 +358,7 @@ class Acupoint extends PureComponent {
             style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
           >
             {getFieldDecorator('key')(
-              <Input placeholder="请输入菜名" style={{ width: 400, marginRight: 20 }} />
+              <Input placeholder="请输入穴位名" style={{ width: 400, marginRight: 20 }} />
             )}
             <Button type="primary" htmlType="submit">
               查询
@@ -386,7 +386,7 @@ class Acupoint extends PureComponent {
       },
     };
     return (
-      <PageHeaderWrapper title="用户管理">
+      <PageHeaderWrapper title="穴位管理">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

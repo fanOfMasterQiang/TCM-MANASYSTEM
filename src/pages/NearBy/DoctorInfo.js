@@ -9,7 +9,7 @@ import router from 'umi/router';
 const { Events } = Base;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const Option = Select.Option;
+const {Option} = Select;
 
 const ClearItem = {
   Id: '',
@@ -221,7 +221,7 @@ class DoctorInfo extends PureComponent {
                 </Map>
               </div>
             </FormItem>
-            <FormItem {...formItemLayout} label="擅长">
+            {/* <FormItem {...formItemLayout} label="擅长">
               <List
                 style={{ height: 300 }}
                 dataSource={Doctor.GoodAt}
@@ -254,7 +254,7 @@ class DoctorInfo extends PureComponent {
                   );
                 }}
               />
-            </FormItem>
+            </FormItem> */}
             <FormItem style={{ marginTop: 50 }}>
               <div align="center">
                 <Button type="primary" htmlType="submit">

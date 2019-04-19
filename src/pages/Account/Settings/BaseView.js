@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Upload, Button, message } from 'antd';
+import { Form, Input, Upload, Button, Radio } from 'antd';
 import { connect } from 'dva';
 import styles from './BaseView.less';
 // import { getTimeDistance } from '@/utils/utils';
 
 const FormItem = Form.Item;
+const RadioGroup = Radio.Group;
 
 // 头像组件 方便以后独立，增加裁剪之类的功能
 const AvatarView = ({ avatar }) => (
@@ -32,6 +33,10 @@ const AvatarView = ({ avatar }) => (
 }))
 @Form.create()
 class BaseView extends Component {
+  state = {
+    Gender:0
+  };
+
   componentDidMount() {
     this.setBaseInfo();
   }
@@ -53,6 +58,7 @@ class BaseView extends Component {
     const {
       form,dispatch,currentUser,
     } = this.props;
+    const {Gender } =this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       dispatch({
@@ -60,7 +66,7 @@ class BaseView extends Component {
         payload:{
           Id:currentUser.Id,
           Name:fieldsValue.Name,
-          Phone:fieldsValue.Phone
+          Gender:Gender
         },
       });
     })
@@ -68,7 +74,7 @@ class BaseView extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator },currentUser
     } = this.props;
     return (
       <div className={styles.baseView} ref={this.getViewDom}>
@@ -85,16 +91,14 @@ class BaseView extends Component {
                 ],
               })(<Input />)}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.phone' })}>
-              {getFieldDecorator('Phone', {
-                rules: [
-                  {
-                    required: true,
-                    len:11,
-                    message: formatMessage({ id: 'app.settings.basic.phone-message' }, {}),
-                  },
-                ],
-              })(<Input />)}
+            <FormItem label="性别">
+              <RadioGroup
+                onChange={value => {this.state.Gender = value.target.value-0}}
+                defaultValue={currentUser.Gender || 0}
+              >
+                <Radio value={0}>男</Radio>
+                <Radio value={1}>女</Radio>
+              </RadioGroup>
             </FormItem>
             <Button type="primary" onClick={()=>this.handleSubmit()}>
               <FormattedMessage

@@ -388,7 +388,7 @@ class Recipes extends PureComponent {
       },
     };
     return (
-      <PageHeaderWrapper title="用户管理">
+      <PageHeaderWrapper title="食谱管理">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
