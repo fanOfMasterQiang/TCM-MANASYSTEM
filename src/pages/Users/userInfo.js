@@ -17,7 +17,7 @@ class userInfo extends Component {
     dispatch({
       type: 'userInfo/queryInfo',
       payload: {
-        Id: location.query.Id,
+        UserId: location.query.Id,
       },
     });
   }
@@ -54,7 +54,7 @@ class userInfo extends Component {
             color='rgba(0,0,0,0)'
             xAxis={xAxis}
             yAxis={yAxis}
-            data={lineData.recordXY}
+            data={lineData[0]}
           />
         </Card>
         <Card title='血糖数据' style={{padding:50}}>
@@ -65,7 +65,7 @@ class userInfo extends Component {
             color='rgba(0,0,0,0)'
             xAxis={xAxis}
             yAxis={yAxis}
-            data={lineData.recordXT}
+            data={lineData[1]}
           />
         </Card>
         <Card title='体温数据' style={{padding:50}}>
@@ -76,7 +76,7 @@ class userInfo extends Component {
             color='rgba(0,0,0,0)'
             xAxis={xAxis}
             yAxis={yAxis}
-            data={lineData.recordTW}
+            data={lineData[2]}
           />
         </Card>
       </PageHeaderWrapper>

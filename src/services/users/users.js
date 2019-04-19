@@ -57,7 +57,11 @@ export async function delUser(params) {
 }
 
 
-
+export async function queryPhyInfo(params) {
+  return request(`${Config.service}/api/UserInfos/getPhyByUserId?${stringify(params)}`,{
+    expirys:false
+  });
+}
 
 export async function queryRelate(params) {
   return request(`${Config.service}/api/UserInfos/getRelateUser?${stringify(params)}`,{
