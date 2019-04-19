@@ -1,4 +1,4 @@
-import { queryVideo, upload,delVideo} from '@/services/acupoint/acupoint';
+import { queryVideo, addVideo,delVideo} from '@/services/acupoint/acupoint';
 
 export default {
   namespace: 'acuVideo',
@@ -31,7 +31,7 @@ export default {
       }
     },
     *uploadVideo({ payload, callback }, { call }) {
-      yield call(upload, payload);
+      yield call(addVideo, payload);
       if (callback) callback();
     },
     *removeData({ payload, callback }, { call }) {

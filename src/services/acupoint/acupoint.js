@@ -57,8 +57,8 @@ export async function delAcupoint(params) {
 }
 
 
-export async function upload(params) {
-  return request(`/api/acuVideo/upload`, {
+export async function addVideo(params) {
+  return request(`${Config.service}/api/VideoSources/add`, {
     method: 'POST',
     body: {
       ...params,
@@ -71,13 +71,13 @@ export async function upload(params) {
 }
 
 export async function queryVideo(params) {
-  return request(`/api/acuVideo/query?${stringify(params)}`, {
+  return request(`${Config.service}/api/VideoSources/getByAcuId?${stringify(params)}`, {
     expirys: false,
   });
 }
 
 export async function delVideo(params) {
-  return request(`/api/acuVideo/del`, {
+  return request(`${Config.service}/api/VideoSources/deteByIds`, {
     method: 'POST',
     body: {
       ...params,
