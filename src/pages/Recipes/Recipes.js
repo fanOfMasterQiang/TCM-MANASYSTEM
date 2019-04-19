@@ -95,6 +95,11 @@ class VideoMana extends React.PureComponent{
     })
   };
 
+  preVideo =(url) => {
+    let comUrl = `${Config.service}${url}`;
+    window.open(comUrl,"_blank");
+  };
+
   render(){
     const { recipes:{Item,modalVisible}} = this.props;
     const { fileList,uploading } = this.state;
@@ -137,7 +142,12 @@ class VideoMana extends React.PureComponent{
       >
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频地址">
           <span>{Item && Item.Url}</span>
-          {Item && Item.Url && <Icon type="delete" style={{marginLeft:10,fontSize:18}} onClick={()=>this.onRemove()} />}
+          {Item && Item.Url &&
+            <div>
+              <a onClick={()=>this.onRemove()}>删除</a>
+              <a style={{marginLeft:18}} onClick={()=>this.preVideo(Item.Url)}>预览</a>
+            </div>
+          }
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="视频选择">
           <div>

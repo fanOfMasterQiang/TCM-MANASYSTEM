@@ -204,6 +204,11 @@ class AcupointVideo extends PureComponent {
     });
   };
 
+  preVideo =(url) => {
+    let comUrl = `${Config.service}${url}`;
+    window.open(comUrl,"_blank");
+  };
+
   delItem =(item) => {
     const { dispatch,acuVideo:{AcupointId} } = this.props;
     dispatch({
@@ -224,11 +229,17 @@ class AcupointVideo extends PureComponent {
   renderItem = item =>{
     return(
       <List.Item
+        key={item.Id}
         actions={[
-          <a onClick={()=>this.delItem(item)}>删除</a>
+          <a onClick={()=>this.preVideo(item.Url)}>视频预览</a>,
+          <a onClick={()=>this.delItem(item)}>删除视频</a>,
         ]}
       >
-        {item.Url}
+        <List.Item.Meta
+          title={<span>{'标题：'}{item.Title}</span>}
+          description={<span>{'摘要：'}{item.Abstract}</span>}
+        />
+        {`描述：${item.Description}`}
       </List.Item>
     )
   };
@@ -241,6 +252,7 @@ class AcupointVideo extends PureComponent {
       <PageHeaderWrapper title="视频管理" content="视频管理">
         <Card bordered={false}>
           <List
+            itemLayout="vertical"
             footer={
               <div align="center">
                 <a onClick={()=>this.setModalVisible(true)}>新增</a>
