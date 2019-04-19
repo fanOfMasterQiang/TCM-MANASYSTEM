@@ -90,9 +90,9 @@ class SecurityView extends Component {
       dispatch({
         type: 'user/changePassword',
         payload: {
-          Id:user.currentUser.Id,
-          PasswordOld,
-          PasswordNew
+          AdminId:user.currentUser.Id,
+          OldPwd:PasswordOld,
+          NewPwd:PasswordNew
         },
         callback:()=>{
           let strength = selfthis.checkStrength(PasswordNew);
