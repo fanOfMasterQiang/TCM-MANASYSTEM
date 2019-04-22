@@ -79,20 +79,7 @@ export default [
         ],
       },
 
-      // forms
-      {
-        path: '/number',
-        icon: 'contacts',
-        name: 'number',
-        routes: [
-          {
-            path: '/number/advanced-form',
-            name: 'advancedform',
-            authority: ['admin'],
-            component: './Number/AdvancedForm',
-          },
-        ],
-      },
+
       // account
       {
         name: 'account',
@@ -136,6 +123,12 @@ export default [
             name: 'userInfo',
             hideInMenu: true,
             component: './Users/userInfo',
+          },
+          {
+            path: '/users/advanced-form',
+            name: 'advancedform',
+            authority: ['admin'],
+            component: './Number/AdvancedForm',
           },
         ],
       },
