@@ -5,8 +5,9 @@ export default {
   'menu.dashboard.analysis': '数据展示',
 
   'menu.users': '用户',
-  'menu.users.userMana': '用户管理',
+  'menu.users.userMana': '普通用户管理',
   'menu.users.userInfo': '用户信息',
+  'menu.users.advancedform': '系统用户管理',
 
   'menu.diagnosis': '自诊',
   'menu.diagnosis.syndrome': '证型管理',
@@ -24,8 +25,7 @@ export default {
   'menu.acupoint.acupoint': '穴位管理',
   'menu.acupoint.acupointVideo': '穴位视频',
 
-  'menu.number': '成员',
-  'menu.number.advancedform': '成员管理',
+
 
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
