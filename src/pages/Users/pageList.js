@@ -19,6 +19,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
 import moment from 'moment';
+import Config from '@/services/config';
 
 import styles from './pageList.less';
 
@@ -209,7 +210,7 @@ const ManaForm = Form.create()(props => {
             (<img
               alt="ex"
               className={styles.image}
-              src={Item.Avatar}
+              src={`${Config.service}${Item.Avatar}`}
             />)
             :null}
           <Upload
