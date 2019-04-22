@@ -16,7 +16,7 @@ export default {
   },
 
   effects: {
-    *queryInfo({ payload }, { call, put }) {
+    *queryInfo({ payload,callback }, { call, put }) {
       const response = yield call(queryRecipe, payload);
       if (response.Success) {
         yield put({
@@ -25,6 +25,7 @@ export default {
             Recipes: response.Data,
           },
         });
+        if(callback) callback(response.Data)
       }
     },
     *addItem({ payload, callback }, { call }) {

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Form, Input, Select, Card, Button,Upload,message } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
+import Config from '@/services/config';
 
 import styles from './RecipeInfo.less';
 
@@ -193,7 +194,7 @@ class RecipeInfo extends PureComponent {
                   (<img
                     alt="ex"
                     className={styles.image}
-                    src={Recipes.Image}
+                    src={`${Config.service}${Recipes.Image}`}
                   />)
                   :null}
                 <Upload
