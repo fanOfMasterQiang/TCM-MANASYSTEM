@@ -82,7 +82,7 @@ export default [
       // forms
       {
         path: '/number',
-        icon: 'form',
+        icon: 'contacts',
         name: 'number',
         routes: [
           {
@@ -96,7 +96,7 @@ export default [
       // account
       {
         name: 'account',
-        icon: 'user',
+        icon: 'desktop',
         path: '/account',
         routes: [
           {
@@ -123,16 +123,16 @@ export default [
       // users
       {
         path: '/users',
-        icon: 'table',
+        icon: 'team',
         name: 'users',
         routes: [
           {
-            path: '/users/page-list',
-            name: 'users-mana',
+            path: '/users/mana',
+            name: 'userMana',
             component: './Users/pageList',
           },
           {
-            path: '/users/info',
+            path: '/users/mana/userInfo',
             name: 'userInfo',
             hideInMenu: true,
             component: './Users/userInfo',
@@ -162,7 +162,7 @@ export default [
       // nearby
       {
         path: '/nearby',
-        icon: 'form',
+        icon: 'environment',
         name: 'nearby',
         routes: [
           {
@@ -171,7 +171,7 @@ export default [
             component: './NearBy/Doctor',
           },
           {
-            path: '/nearby/doctorInfo',
+            path: '/nearby/doctor/doctorInfo',
             name: 'doctorInfo',
             hideInMenu: true,
             component: './NearBy/DoctorInfo',
@@ -181,16 +181,16 @@ export default [
       // recipes
       {
         path: '/recipes',
-        icon: 'form',
+        icon: 'profile',
         name: 'recipes',
         routes: [
           {
-            path: '/recipes/index',
+            path: '/recipes/recipes',
             name: 'recipes',
             component: './Recipes/Recipes',
           },
           {
-            path: '/recipes/recipeInfo',
+            path: '/recipes/recipes/recipeInfo',
             name: 'recipeInfo',
             hideInMenu: true,
             component: './Recipes/RecipeInfo',
@@ -200,16 +200,16 @@ export default [
       // acupoint
       {
         path: '/acupoint',
-        icon: 'form',
+        icon: 'pushpin',
         name: 'acupoint',
         routes: [
           {
-            path: '/acupoint/index',
+            path: '/acupoint/acupoint',
             name: 'acupoint',
             component: './Acupoint/Acupoint',
           },
           {
-            path: '/acupoint/acupointVideo',
+            path: '/acupoint/acupoint/acupointVideo',
             name: 'acupointVideo',
             hideInMenu: true,
             component: './Acupoint/AcupointVideo',

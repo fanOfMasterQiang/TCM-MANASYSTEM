@@ -7,17 +7,18 @@ import { MiniArea } from '@/components/Charts';
 
 const { Description } = DescriptionList;
 
-@connect(({ userInfo, loading }) => ({
+@connect(({ userInfo,routerParams, loading }) => ({
   userInfo,
+  routerParams,
   loading: loading.effects['userInfo/queryInfo'],
 }))
 class userInfo extends Component {
   componentDidMount() {
-    const { dispatch, location } = this.props;
+    const { dispatch, routerParams:{UserId} } = this.props;
     dispatch({
       type: 'userInfo/queryInfo',
       payload: {
-        UserId: location.query.Id,
+        UserId: UserId,
       },
     });
   }

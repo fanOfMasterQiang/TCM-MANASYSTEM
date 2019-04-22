@@ -176,14 +176,15 @@ class ManaForm extends React.PureComponent{
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ acuVideo, loading }) => ({
+@connect(({ acuVideo,routerParams, loading }) => ({
   acuVideo,
+  routerParams,
   loading: loading.models.acuVideo,
 }))
 @Form.create()
 class AcupointVideo extends PureComponent {
   componentDidMount() {
-    const {dispatch,acuVideo:{AcupointId}} = this.props;
+    const {dispatch,routerParams:{AcupointId}} = this.props;
     dispatch({
       type: 'acuVideo/queryData',
       payload: {

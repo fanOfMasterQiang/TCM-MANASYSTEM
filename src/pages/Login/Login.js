@@ -63,11 +63,6 @@ class LoginPage extends Component {
               this.loginForm.validateFields(this.handleSubmit);
             }}
           />
-          <div>
-            <a style={{ float: 'right' }} href="">
-              <FormattedMessage id="app.login.forgot-password" />
-            </a>
-          </div>
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />
           </Submit>

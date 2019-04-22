@@ -295,14 +295,12 @@ class Recipes extends PureComponent {
   editRecipes = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'recipeInfo/set',
+      type: 'routerParams/setStates',
       payload: {
-        Recipes:{...record}
+        RecipeId:record ? record.Id : '',
       },
     });
-    record?
-    router.push(`/recipes/recipeInfo?Id=${record.Id}`):
-    router.push(`/recipes/recipeInfo`);
+    router.push(`/recipes/recipes/recipeInfo`);
   };
 
   editRecipeVideo = async record => {

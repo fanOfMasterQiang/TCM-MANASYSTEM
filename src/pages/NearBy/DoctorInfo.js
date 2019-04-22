@@ -23,20 +23,29 @@ const ClearItem = {
   GoodAt: [],
 };
 
-@connect(({ doctorInfo, loading }) => ({
+@connect(({ doctorInfo,routerParams, loading }) => ({
   doctorInfo,
+  routerParams,
   loading: loading.models.doctorInfo,
 }))
 @Form.create()
 class DoctorInfo extends PureComponent {
 
   componentDidMount() {
-    const { form,doctorInfo:{Doctor}} = this.props;
-    if(Doctor.Id){
-      Object.keys(form.getFieldsValue()).forEach(key => {
-        const obj = {};
-        obj[key] = Doctor[key] || null;
-        form.setFieldsValue(obj);
+    const { dispatch, form,routerParams:{DoctorId}} = this.props;
+    if(DoctorId){
+      dispatch({
+        type: 'doctorInfo/queryInfo',
+        payload: {
+          Id: DoctorId,
+        },
+        callback:(res) => {
+          Object.keys(form.getFieldsValue()).forEach(key => {
+            const obj = {};
+            obj[key] = res[key] || null;
+            form.setFieldsValue(obj);
+          });
+        }
       });
     }
   }

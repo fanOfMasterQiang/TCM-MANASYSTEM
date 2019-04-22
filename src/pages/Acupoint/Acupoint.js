@@ -282,12 +282,12 @@ class Acupoint extends PureComponent {
   editAcupointVideo = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'acuVideo/set',
+      type: 'routerParams/setStates',
       payload: {
         AcupointId:record.Id
       },
     });
-    router.push(`/acupoint/acupointVideo`);
+    router.push(`/acupoint/acupoint/acupointVideo`);
   };
 
   setModalVisible = async(flag,record) => {

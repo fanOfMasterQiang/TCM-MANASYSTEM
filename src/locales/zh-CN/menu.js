@@ -1,11 +1,11 @@
 export default {
   'menu.home': '首页',
   'menu.login': '登录',
-  'menu.dashboard': 'Dashboard',
-  'menu.dashboard.analysis': '分析页',
+  'menu.dashboard': '统计',
+  'menu.dashboard.analysis': '数据展示',
 
   'menu.users': '用户',
-  'menu.users.users-mana': '用户管理',
+  'menu.users.userMana': '用户管理',
   'menu.users.userInfo': '用户信息',
 
   'menu.diagnosis': '自诊',
@@ -53,7 +53,8 @@ export default {
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
   'menu.exception.trigger': '触发错误',
-  'menu.account': '个人页',
+
+  'menu.account': '个人',
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',

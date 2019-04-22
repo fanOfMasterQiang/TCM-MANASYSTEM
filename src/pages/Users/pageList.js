@@ -469,7 +469,7 @@ class pageList extends PureComponent {
       dataIndex: 'UserName',
       width: '20%',
       render:(text,record)=>
-        <a onClick={()=>router.push(`/users/info?Id=${record.Id}`)}>{text}</a>
+        <a onClick={()=>this.watchInfo(record.Id)}>{text}</a>
     },
     {
       title: '性别',
@@ -507,6 +507,17 @@ class pageList extends PureComponent {
       payload: "",
     });
   }
+
+  watchInfo = (Id) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'routerParams/setStates',
+      payload: {
+        UserId:Id
+      },
+    });
+    router.push(`/users/mana/userInfo`)
+  };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch,page:{formValues} } = this.props;
