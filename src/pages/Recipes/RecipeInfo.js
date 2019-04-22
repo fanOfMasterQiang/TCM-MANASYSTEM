@@ -19,19 +19,28 @@ const ClearItem = {
   Materials: [],
 };
 
-@connect(({ recipeInfo, loading }) => ({
+@connect(({ recipeInfo,routerParams, loading }) => ({
   recipeInfo,
+  routerParams,
   loading: loading.models.recipeInfo,
 }))
 @Form.create()
 class RecipeInfo extends PureComponent {
   componentDidMount() {
-    const { form,recipeInfo:{Recipes}} = this.props;
-    if(Recipes.Id){
-      Object.keys(form.getFieldsValue()).forEach(key => {
-        const obj = {};
-        obj[key] = Recipes[key] || null;
-        form.setFieldsValue(obj);
+    const {dispatch, form,routerParams:{RecipeId}} = this.props;
+    if(RecipeId){
+      dispatch({
+        type: 'recipeInfo/queryInfo',
+        payload: {
+          Id: RecipeId,
+        },
+        callback:(res) => {
+          Object.keys(form.getFieldsValue()).forEach(key => {
+            const obj = {};
+            obj[key] = res[key] || null;
+            form.setFieldsValue(obj);
+          });
+        }
       });
     }
   }

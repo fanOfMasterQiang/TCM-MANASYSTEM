@@ -137,14 +137,12 @@ class Doctor extends PureComponent {
   editDoctor = record => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'doctorInfo/set',
+      type: 'routerParams/setStates',
       payload: {
-        Doctor:{...record}
+        DoctorId:record ? record.Id : '',
       },
     });
-    record?
-    router.push(`/nearby/doctorInfo?Id=${record.Id}`):
-    router.push(`/nearby/doctorInfo`)
+    router.push(`/nearby/doctor/doctorInfo`)
   };
 
   handleDelete = () => {

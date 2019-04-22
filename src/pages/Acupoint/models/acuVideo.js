@@ -26,6 +26,7 @@ export default {
           type: 'set',
           payload: {
             dataSource:response.Data,
+            AcupointId:payload.AcupointId
           },
         });
       }
