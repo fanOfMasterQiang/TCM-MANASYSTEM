@@ -90,8 +90,10 @@ export default {
 
   subscriptions: {
     setup({ history }) {
+      console.log(history)
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
       return history.listen(({ pathname, search }) => {
+        // window.location.replace(`/#${history.location.pathname}`)
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }
