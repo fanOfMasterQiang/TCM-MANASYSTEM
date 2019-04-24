@@ -130,6 +130,17 @@ export default [
             authority: ['admin'],
             component: './Number/AdvancedForm',
           },
+          {
+            path:'/users/userList',
+            name:'userList',
+            component:'./Users/userList',
+          },
+          {
+            path:'/users/userList/collectionList',
+            name:'collectionList',
+            hideInMenu:true,
+            component:'./Users/collectionList',
+          },
         ],
       },
 
