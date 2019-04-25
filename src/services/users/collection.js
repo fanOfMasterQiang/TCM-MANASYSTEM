@@ -2,14 +2,14 @@ import { stringify } from 'qs';
 import Config from '../config';
 import request from '@/utils/request';
 
-//查看全部收藏
+// 查看全部收藏
 export async function collectionList(params) {
-  return request(`${Config.service}/api/UserCollections/getById?${stringify(params)}`,{
+  return request(`${Config.service}/api/UserInfos/getCollectByUserId?${stringify(params)}`,{
     expirys:false
   });
 }
 
-//删除收藏
+// 删除收藏
 export async function delCollection(params) {
   return request(`${Config.service}/api/UserCollections/deteByIds`,{
     method: 'POST',
@@ -22,7 +22,7 @@ export async function delCollection(params) {
   });
 }
 
-//视频详情
+// 视频详情
 export async function collectedVideo(params) {
   return request(`${Config.service}/api/VideoSources/getById?${stringify(params)}`,{
     expirys:false

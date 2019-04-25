@@ -15,7 +15,7 @@ import router from 'umi/router';
 import moment from 'moment';
 import Config from '@/services/config';
 
-import styles from './pageList.less';
+import styles from '../pageList.less';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -60,7 +60,7 @@ class pageList extends PureComponent {
           ? (
             <div key={record.Id}>
               <Button onClick={() => router.push({pathname:'/users/userList/collectionList',query:record})} className={styles.btn}>收藏列表</Button>
-              <Button onClick={() => this.handleModalVisible(true,record)} className={styles.btn}>笔记列表</Button>
+              <Button onClick={() =>  router.push({pathname:'/users/userList/collectionList',query:record})} className={styles.btn}>笔记列表</Button>
             </div>
           ) : null
       },
