@@ -9,8 +9,10 @@ export default {
     showData:[],
     collectionData:[],
 
-    Video:[],
-    Recipe:[]
+    Video:{},
+    VideoVisible:false,
+    Recipe:{},
+    RecipeVisible:false,
   },
 
   effects: {
@@ -60,18 +62,12 @@ export default {
     },
     setData(state, {payload}) {
       let show = [];
-      Array.isArray(payload.recipes) && payload.recipes.map(recipe => {
+      Array.isArray(payload) && payload.map(collect => {
         show.push({
-          Id:recipe.Id,
-          Type:0,
-          Title:recipe.Title
-        })
-      })
-      Array.isArray(payload.videosources) && payload.videosources.map(video => {
-        show.push({
-          Id:video.Id,
-          Type:1,
-          Title:video.Title
+          Id:collect.Id,
+          Type:collect.Type,
+          Title:collect.Detail ? collect.Detail.Title : '',
+          Detail:collect.Detail
         })
       })
 

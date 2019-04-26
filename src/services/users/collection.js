@@ -4,7 +4,7 @@ import request from '@/utils/request';
 
 // 查看全部收藏
 export async function collectionList(params) {
-  return request(`${Config.service}/api/UserInfos/getCollectByUserId?${stringify(params)}`,{
+  return request(`${Config.service}/api/UserCollections/getById?${stringify(params)}`,{
     expirys:false
   });
 }
@@ -19,6 +19,7 @@ export async function delCollection(params) {
     headers:{
       "Content-Type":"application/x-www-form-urlencoded"
     },
+    traditional:true
   });
 }
 
@@ -31,7 +32,7 @@ export async function collectedVideo(params) {
 
 
 
-//食谱详情
+// 食谱详情
 export async function collectedRecipes(params) {
   return request(`${Config.service}/api/Recipes/getById?${stringify(params)}`,{
     expirys:false
