@@ -136,6 +136,10 @@ export default [
                 path: '/users/mana/userMenu/collection',
                 component: './Users/Mana/collectionList',
               },
+              {
+                path: '/users/mana/userMenu/article',
+                component: './Users/Mana/UserArticle',
+              },
             ]
           },
 

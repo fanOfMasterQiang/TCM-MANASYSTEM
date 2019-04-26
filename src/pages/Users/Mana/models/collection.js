@@ -1,6 +1,4 @@
-import { collectionList,collectedVideo,collectedRecipes,delCollection} from '@/services/users/collection';
-import { Format} from '@/utils/utils';
-
+import { collectionList,delCollection} from '@/services/users/collection';
 
 export default {
   namespace: 'collection',

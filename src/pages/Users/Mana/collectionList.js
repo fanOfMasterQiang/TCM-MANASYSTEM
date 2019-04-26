@@ -27,6 +27,24 @@ const RecipeDetail = Form.create()(props => {
     });
   };
 
+  const typeText = (type) =>{
+     let typeTxt = '';
+    switch (type) {
+      case 1:
+        typeTxt = '家常菜';
+        break;
+      case 2:
+        typeTxt = '节气菜';
+        break;
+      case 3:
+        typeTxt = '粥';
+        break;
+      default:
+        typeTxt = '汤';
+    }
+    return typeTxt
+  }
+
   return (
     <Modal
       centered
@@ -41,7 +59,7 @@ const RecipeDetail = Form.create()(props => {
         <span>{Recipe.Title}</span>
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
-        <span>{Recipe.Type}</span>
+        <span>{typeText(Recipe.Type)}</span>
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="材料">
         <span>{Recipe.Material}</span>
@@ -106,7 +124,7 @@ const VideoDetail = Form.create()(props => {
   loading: loading.models.collection,
 }))
 @Form.create()
-class pageList extends PureComponent {
+class collectionList extends PureComponent {
 
   componentDidMount(){
     const { dispatch,routerParams:{UserId} } = this.props;
@@ -171,7 +189,7 @@ class pageList extends PureComponent {
         dataIndex: 'Type',
         width: '20%',
         render: (text, record) => {
-          return record.Type === 0?'食谱':'视频'
+          return record.Type-0 === 0?'食谱':'视频'
         }
       },
       {
@@ -209,4 +227,4 @@ class pageList extends PureComponent {
   }
 }
 
-export default pageList;
+export default collectionList;
