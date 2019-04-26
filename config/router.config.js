@@ -116,14 +116,33 @@ export default [
           {
             path: '/users/mana',
             name: 'userMana',
-            component: './Users/pageList',
+            component: './Users/PageList',
           },
           {
-            path: '/users/mana/userInfo',
+            path: '/users/mana/userMenu',
             name: 'userInfo',
             hideInMenu: true,
-            component: './Users/userInfo',
+            component: './Users/Mana/UserMenu',
+            routes:[
+              {
+                path: '/users/mana/userMenu',
+                redirect: '/users/mana/userMenu/userInfo',
+              },
+              {
+                path: '/users/mana/userMenu/userInfo',
+                component: './Users/Mana/UserInfo',
+              },
+              {
+                path: '/users/mana/userMenu/collection',
+                component: './Users/Mana/collectionList',
+              },
+              {
+                path: '/users/mana/userMenu/article',
+                component: './Users/Mana/UserArticle',
+              },
+            ]
           },
+
           {
             path: '/users/advanced-form',
             name: 'advancedform',

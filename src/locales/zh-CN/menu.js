@@ -8,6 +8,8 @@ export default {
   'menu.users.userMana': '普通用户管理',
   'menu.users.userInfo': '用户信息',
   'menu.users.advancedform': '系统用户管理',
+  'menu.users.userList':'收藏和笔记管理',
+  'menu.users.collectionList':'收藏列表',
 
   'menu.diagnosis': '自诊',
   'menu.diagnosis.syndrome': '证型管理',

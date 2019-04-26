@@ -46,7 +46,7 @@ const query = {
 
 class BasicLayout extends React.Component {
   componentDidMount() {
-    let uid =localStorage.getItem("userId");
+    let uid =sessionStorage.getItem("userId");
     const {
       dispatch,
       route: { routes, authority },

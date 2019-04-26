@@ -463,14 +463,14 @@ class RelateForm extends PureComponent {
   loading: loading.models.page,
 }))
 @Form.create()
-class pageList extends PureComponent {
+class PageList extends PureComponent {
   columns = [
     {
       title: '姓名',
       dataIndex: 'UserName',
       width: '20%',
       render:(text,record)=>
-        <a onClick={()=>this.watchInfo(record.Id)}>{text}</a>
+        <a onClick={()=>this.watchInfo(record)}>{text}</a>
     },
     {
       title: '性别',
@@ -509,15 +509,15 @@ class pageList extends PureComponent {
     });
   }
 
-  watchInfo = (Id) => {
+  watchInfo = (record) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'routerParams/setStates',
       payload: {
-        UserId:Id
+        UserId:record.Id
       },
     });
-    router.push(`/users/mana/userInfo`)
+    router.push(`/users/mana/userMenu`)
   };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -716,4 +716,4 @@ class pageList extends PureComponent {
   }
 }
 
-export default pageList;
+export default PageList;

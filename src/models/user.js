@@ -53,7 +53,7 @@ export default {
   reducers: {
     // basicLayout
     saveCurrentUser(state, action) {
-      localStorage.setItem("userId",action.payload.Id);
+      sessionStorage.setItem("userId",action.payload.Id);
       return {
         ...state,
         currentUser: {
