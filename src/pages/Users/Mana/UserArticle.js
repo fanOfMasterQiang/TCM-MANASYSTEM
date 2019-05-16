@@ -131,7 +131,7 @@ class UserArticle extends PureComponent {
             ? (
               <div key={record.Id}>
                 <Button onClick={() => this.handleProfile(record)} className={styles.btn}>查看</Button>
-                <Button onClick={() => this.handleDelete(record)} className={styles.btn}>取消收藏</Button>
+                <Button onClick={() => this.handleDelete(record)} className={styles.btn}>删除笔记</Button>
               </div>
             ) : null
         },
