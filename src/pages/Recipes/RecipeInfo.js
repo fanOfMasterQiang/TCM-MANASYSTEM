@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Select, Card, Button,Upload,message } from 'antd';
+import { Form, Input, Select, Card, Button, Upload, message } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import router from 'umi/router';
 import Config from '@/services/config';
@@ -8,7 +8,7 @@ import Config from '@/services/config';
 import styles from './RecipeInfo.less';
 
 const FormItem = Form.Item;
-const {Option} = Select;
+const { Option } = Select;
 
 const ClearItem = {
   Id: '',
@@ -20,7 +20,7 @@ const ClearItem = {
   Materials: [],
 };
 
-@connect(({ recipeInfo,routerParams, loading }) => ({
+@connect(({ recipeInfo, routerParams, loading }) => ({
   recipeInfo,
   routerParams,
   loading: loading.models.recipeInfo,
@@ -28,26 +28,30 @@ const ClearItem = {
 @Form.create()
 class RecipeInfo extends PureComponent {
   componentDidMount() {
-    const {dispatch, form,routerParams:{RecipeId}} = this.props;
-    if(RecipeId){
+    const {
+      dispatch,
+      form,
+      routerParams: { RecipeId },
+    } = this.props;
+    if (RecipeId) {
       dispatch({
         type: 'recipeInfo/queryInfo',
         payload: {
           Id: RecipeId,
         },
-        callback:(res) => {
+        callback: res => {
           Object.keys(form.getFieldsValue()).forEach(key => {
             const obj = {};
             obj[key] = res[key] || null;
             form.setFieldsValue(obj);
           });
-        }
+        },
       });
     }
   }
 
-  componentWillUnmount(){
-    const {dispatch} = this.props;
+  componentWillUnmount() {
+    const { dispatch } = this.props;
     dispatch({
       type: 'recipeInfo/setStates',
       payload: {
@@ -98,7 +102,7 @@ class RecipeInfo extends PureComponent {
       },
     };
 
-    const beforeUpload = (file) =>{
+    const beforeUpload = file => {
       const isJPG = file.type === 'image/jpeg';
       if (!isJPG) {
         message.error('You can only upload JPG file!');
@@ -109,33 +113,34 @@ class RecipeInfo extends PureComponent {
       }
       return isJPG && isLt2M;
     };
-    const onChange = (info) =>{
+    const onChange = info => {
       if (info.file.status === 'done') {
-        if(info.fileList.length > 1){
-          info.fileList.splice(0,1);
+        if (info.fileList.length > 1) {
+          info.fileList.splice(0, 1);
         }
         let reader = new FileReader();
         reader.readAsDataURL(info.file.originFileObj);
-        reader.onload = (event) =>{
+        reader.onload = event => {
           dispatch({
             type: 'recipeInfo/set',
             payload: {
               Recipes: {
                 ...Recipes,
-                Image:event.target.result
+                Image: event.target.result,
+                Local: true,
               },
             },
           });
-        }
+        };
       }
     };
-    const onRemove = () =>{
+    const onRemove = () => {
       dispatch({
         type: 'recipeInfo/set',
         payload: {
           Recipes: {
             ...Recipes,
-            Image:''
+            Image: '',
           },
         },
       });
@@ -190,20 +195,20 @@ class RecipeInfo extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label="封面">
               <div>
-                {Recipes.Image?
-                  (<img
+                {Recipes.Image ? (
+                  <img
                     alt="ex"
                     className={styles.image}
-                    src={`${Config.service}${Recipes.Image}`}
-                  />)
-                  :null}
+                    src={Recipes.Local ? Recipes.Image : `${Config.service}${Recipes.Image}`}
+                  />
+                ) : null}
                 <Upload
                   name="topicImg"
                   multiple={false}
                   accept=".jpg,.jpeg,.png"
                   className="topic-insertImg"
-                  action=""
-                  beforeUpload={(file)=>beforeUpload(file)}
+                  action={`${Config.service}/api/Admins/getAll`}
+                  beforeUpload={file => beforeUpload(file)}
                   onChange={info => onChange(info)}
                   onRemove={() => onRemove()}
                 >

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button, message,Modal,Upload } from 'antd';
+import { Row, Col, Card, Form, Input, Button, message, Modal, Upload } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Ellipsis from '@/components/Ellipsis';
@@ -8,22 +8,25 @@ import router from 'umi/router';
 import Config from '@/services/config';
 import styles from './Acupoint.less';
 
-
 const FormItem = Form.Item;
 FormItem.className = styles['ant-form-item'];
 const ClearItem = {
-  Id: "",
-  Name: "",
-  Description:'',
-  Image:'',
-  VideoSource:{},
+  Id: '',
+  Name: '',
+  Description: '',
+  Image: '',
+  VideoSource: {},
 };
-const setInfo ={};
+const setInfo = {};
 
-const EditModal = (props => {
-  const { acupoint:{Item, modalVisible},dispatch,form} = props;
+const EditModal = props => {
+  const {
+    acupoint: { Item, modalVisible },
+    dispatch,
+    form,
+  } = props;
 
-  setInfo.setBaseInfo =() =>{
+  setInfo.setBaseInfo = () => {
     Object.keys(form.getFieldsValue()).forEach(key => {
       const obj = {};
       obj[key] = Item[key] || null;
@@ -35,8 +38,8 @@ const EditModal = (props => {
     dispatch({
       type: 'acupoint/setStates',
       payload: {
-        modalVisible:false,
-        Item:ClearItem
+        modalVisible: false,
+        Item: ClearItem,
       },
     });
   };
@@ -46,32 +49,32 @@ const EditModal = (props => {
       if (err) return;
       Item.Name = fieldsValue.Name;
       Item.Description = fieldsValue.Description;
-      if(Item.Id === ""){
+      if (Item.Id === '') {
         dispatch({
           type: 'acupoint/addData',
           payload: {
             ...Item,
-            Id:null,
+            Id: null,
           },
-          callback:()=>{
+          callback: () => {
             dispatch({
               type: 'acupoint/queryData',
               payload: {},
             });
-          }
+          },
         });
-      }else {
+      } else {
         dispatch({
           type: 'acupoint/updateData',
           payload: {
-            ...Item
+            ...Item,
           },
-          callback:()=>{
+          callback: () => {
             dispatch({
               type: 'acupoint/queryData',
               payload: {},
             });
-          }
+          },
         });
       }
       closeModal();
@@ -79,7 +82,7 @@ const EditModal = (props => {
     });
   };
 
-  const beforeUpload = (file) =>{
+  const beforeUpload = file => {
     const isJPG = file.type === 'image/jpeg';
     if (!isJPG) {
       message.error('You can only upload JPG file!');
@@ -90,33 +93,34 @@ const EditModal = (props => {
     }
     return isJPG && isLt2M;
   };
-  const onChange = (info) =>{
+  const onChange = info => {
     if (info.file.status === 'done') {
-      if(info.fileList.length > 1){
-        info.fileList.splice(0,1);
+      if (info.fileList.length > 1) {
+        info.fileList.splice(0, 1);
       }
       let reader = new FileReader();
       reader.readAsDataURL(info.file.originFileObj);
-      reader.onload = (event) =>{
+      reader.onload = event => {
         dispatch({
           type: 'acupoint/set',
           payload: {
             Item: {
               ...Item,
-              Image:event.target.result
+              Image: event.target.result,
+              Local: true,
             },
           },
         });
-      }
+      };
     }
   };
-  const onRemove = () =>{
+  const onRemove = () => {
     dispatch({
       type: 'acupoint/set',
       payload: {
         Item: {
           ...Item,
-          Image:''
+          Image: '',
         },
       },
     });
@@ -129,7 +133,7 @@ const EditModal = (props => {
       width={640}
       title="穴位编辑"
       visible={modalVisible}
-      onOk={()=>okHandle()}
+      onOk={() => okHandle()}
       onCancel={() => closeModal()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="名称">
@@ -144,20 +148,20 @@ const EditModal = (props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="图片">
         <div>
-          {Item.Image?
-            (<img
+          {Item.Image ? (
+            <img
               alt="ex"
               className={styles.image}
-              src={`${Config.service}${Item.Image}`}
-            />)
-            :null}
+              src={Item.Local ? Item.Image : `${Config.service}${Item.Image}`}
+            />
+          ) : null}
           <Upload
             name="topicImg"
             multiple={false}
             accept=".jpg,.jpeg,.png"
             className={styles.image}
-            action=""
-            beforeUpload={(file)=>beforeUpload(file)}
+            action={`${Config.service}/api/Admins/getAll`}
+            beforeUpload={file => beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}
           >
@@ -169,8 +173,7 @@ const EditModal = (props => {
       </FormItem>
     </Modal>
   );
-});
-
+};
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ acupoint, loading }) => ({
@@ -189,12 +192,8 @@ class Acupoint extends PureComponent {
       title: '描述',
       dataIndex: 'Description',
       width: '30%',
-      render: (text) => {
-        return(
-          <Ellipsis>
-            {text}
-          </Ellipsis>
-        );
+      render: text => {
+        return <Ellipsis>{text}</Ellipsis>;
       },
     },
     {
@@ -206,7 +205,7 @@ class Acupoint extends PureComponent {
         } = this.props;
         return showSource && showSource.length >= 1 ? (
           <div key={record.Id}>
-            <Button onClick={() => this.setModalVisible(true,record)} className={styles.btn}>
+            <Button onClick={() => this.setModalVisible(true, record)} className={styles.btn}>
               编辑
             </Button>
             <Button onClick={() => this.editAcupointVideo(record)} className={styles.btn}>
@@ -250,7 +249,7 @@ class Acupoint extends PureComponent {
       type: 'acupoint/setStates',
       payload: {
         formValues: {},
-        current:1,
+        current: 1,
       },
     });
   };
@@ -284,23 +283,23 @@ class Acupoint extends PureComponent {
     dispatch({
       type: 'routerParams/setStates',
       payload: {
-        AcupointId:record.Id
+        AcupointId: record.Id,
       },
     });
     router.push(`/acupoint/acupoint/acupointVideo`);
   };
 
-  setModalVisible = async(flag,record) => {
-    let newRecord = Object.assign({},record)
+  setModalVisible = async (flag, record) => {
+    let newRecord = Object.assign({}, record);
     const { dispatch } = this.props;
     await dispatch({
       type: 'acupoint/set',
       payload: {
-        modalVisible:!!flag,
-        Item:record ? newRecord:ClearItem,
+        modalVisible: !!flag,
+        Item: record ? newRecord : ClearItem,
       },
     });
-    if(record){
+    if (record) {
       setInfo.setBaseInfo();
     }
   };

@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-import { notification,message } from 'antd';
+import { notification, message } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
@@ -53,9 +53,6 @@ const cachedSave = (response, hashcode) => {
   return response;
 };
 
-
-
-
 /**
  * Requests a URL, returning a promise.
  *
@@ -80,6 +77,7 @@ export default function request(url, option) {
 
   const defaultOptions = {
     credentials: 'omit',
+    mode: 'cors',
   };
   const newOptions = { ...defaultOptions, ...options };
   if (
@@ -88,13 +86,13 @@ export default function request(url, option) {
     newOptions.method === 'DELETE'
   ) {
     if (!(newOptions.body instanceof FormData)) {
-      if(newOptions.headers["Content-Type"]==="application/x-www-form-urlencoded"){
+      if (newOptions.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
         newOptions.headers = {
           Accept: 'application/json',
           ...newOptions.headers,
         };
-        newOptions.body = ParamData(newOptions.body,newOptions.traditional);
-      }else {
+        newOptions.body = ParamData(newOptions.body, newOptions.traditional);
+      } else {
         newOptions.headers = {
           Accept: 'application/json',
           'Content-Type': 'Content-Type; charset=utf-8',
@@ -102,14 +100,13 @@ export default function request(url, option) {
         };
         newOptions.body = JSON.stringify(newOptions.body);
       }
-    } else{
+    } else {
       newOptions.headers = {
         Accept: 'application/json',
         ...newOptions.headers,
       };
     }
   }
-
 
   const expirys = options.expirys && 60;
   // options.expirys !== false, return the cache,
@@ -126,11 +123,11 @@ export default function request(url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  const timeOut = new Promise((resolve,reject)=> {
-    setTimeout(() => reject(new Error('Request_Timeout')),newOptions.timeOut || 99999);
+  const timeOut = new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error('Request_Timeout')), newOptions.timeOut || 99999);
   });
 
-  return Promise.race([fetch(url, newOptions),timeOut])
+  return Promise.race([fetch(url, newOptions), timeOut])
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
@@ -142,8 +139,8 @@ export default function request(url, option) {
       return response.json();
     })
     .catch(e => {
-      if (e.message === "Request_Timeout") {
-        message.error("请求超时");
+      if (e.message === 'Request_Timeout') {
+        message.error('请求超时');
         return;
       }
       const status = e.name;
@@ -168,6 +165,6 @@ export default function request(url, option) {
       //   router.push('/exception/404');
       //   return;
       // }
-      message.error("请求出现错误！")
+      message.error('请求出现错误！');
     });
 }

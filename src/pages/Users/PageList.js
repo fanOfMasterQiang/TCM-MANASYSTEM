@@ -25,29 +25,32 @@ import styles from './pageList.less';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const {Search} = Input;
-FormItem.className = styles["ant-form-item"];
+const { Search } = Input;
+FormItem.className = styles['ant-form-item'];
 const ClearItem = {
-  Id: "",
-  Name: "",
-  Gender:0,
-  Phone:'',
-  Born:'',
-  Password:'',
-  Avatar:'',
+  Id: '',
+  Name: '',
+  Gender: 0,
+  Phone: '',
+  Born: '',
+  Password: '',
+  Avatar: '',
 };
-const setInfo ={};
+const setInfo = {};
 
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
-
 const ManaForm = Form.create()(props => {
-  const { page:{Item, modalVisible}, form,dispatch} = props;
+  const {
+    page: { Item, modalVisible },
+    form,
+    dispatch,
+  } = props;
 
-  setInfo.setBaseInfo =() =>{
+  setInfo.setBaseInfo = () => {
     Object.keys(form.getFieldsValue()).forEach(key => {
       const obj = {};
       obj[key] = Item[key] || null;
@@ -61,39 +64,39 @@ const ManaForm = Form.create()(props => {
       Item.UserName = fieldsValue.UserName;
       Item.Phone = fieldsValue.Phone;
       Item.UserPwd = fieldsValue.UserPwd;
-      if(Item.Id === ""){
+      if (Item.Id === '') {
         dispatch({
           type: 'page/addData',
           payload: {
             ...Item,
-            Id:null,
+            Id: null,
           },
-          callback:()=>{
+          callback: () => {
             dispatch({
               type: 'page/queryData',
               payload: {},
             });
-          }
+          },
         });
-      }else {
+      } else {
         dispatch({
           type: 'page/updateData',
           payload: {
-            ...Item
+            ...Item,
           },
-          callback:()=>{
+          callback: () => {
             dispatch({
               type: 'page/queryData',
               payload: {},
             });
-          }
+          },
         });
       }
       dispatch({
         type: 'page/setStates',
         payload: {
-          modalVisible:false,
-          Item:ClearItem,
+          modalVisible: false,
+          Item: ClearItem,
         },
       });
       form.resetFields();
@@ -104,21 +107,21 @@ const ManaForm = Form.create()(props => {
     dispatch({
       type: 'page/setStates',
       payload: {
-        modalVisible:false,
-        Item:ClearItem,
+        modalVisible: false,
+        Item: ClearItem,
       },
     });
   };
 
-  const bornChange = (value) =>{
-    if(value){
-      Item.Birthday = value.format("YYYY-MM-DD")
-    }else {
-      Item.Birthday = ''
+  const bornChange = value => {
+    if (value) {
+      Item.Birthday = value.format('YYYY-MM-DD');
+    } else {
+      Item.Birthday = '';
     }
   };
 
-  const beforeUpload = (file) =>{
+  const beforeUpload = file => {
     const isJPG = file.type === 'image/jpeg';
     if (!isJPG) {
       message.error('You can only upload JPG file!');
@@ -130,34 +133,35 @@ const ManaForm = Form.create()(props => {
     return isJPG && isLt2M;
   };
 
-  const onChange = (info) =>{
+  const onChange = info => {
     if (info.file.status === 'done') {
-      if(info.fileList.length > 1){
-        info.fileList.splice(0,1);
+      if (info.fileList.length > 1) {
+        info.fileList.splice(0, 1);
       }
       let reader = new FileReader();
       reader.readAsDataURL(info.file.originFileObj);
-      reader.onload = (event) =>{
+      reader.onload = event => {
         dispatch({
           type: 'page/set',
           payload: {
             Item: {
               ...Item,
-              Avatar:event.target.result
+              Avatar: event.target.result,
+              Local: true,
             },
           },
         });
-      }
+      };
     }
   };
 
-  const onRemove = () =>{
+  const onRemove = () => {
     dispatch({
       type: 'page/set',
       payload: {
         Recipes: {
           ...Item,
-          Avatar:''
+          Avatar: '',
         },
       },
     });
@@ -180,7 +184,9 @@ const ManaForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别">
         <RadioGroup
-          onChange={value => {Item.Gender = value.target.value-0}}
+          onChange={value => {
+            Item.Gender = value.target.value - 0;
+          }}
           defaultValue={Item.Gender || 0}
         >
           <Radio value={0}>男</Radio>
@@ -189,37 +195,37 @@ const ManaForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="出生日期">
         <DatePicker
-          defaultValue={Item.Birthday?moment(Item.Birthday,'YYYY-MM-DD'):moment(new Date())}
+          defaultValue={Item.Birthday ? moment(Item.Birthday, 'YYYY-MM-DD') : moment(new Date())}
           placeholder="请选择患者出生日期"
           onChange={value => bornChange(value)}
         />
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
         {form.getFieldDecorator('Phone', {
-          rules: [{required: true,len:11, message: '请输入手机号！'}],
+          rules: [{ required: true, len: 11, message: '请输入手机号！' }],
         })(<Input placeholder="请输入手机号" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
         {form.getFieldDecorator('UserPwd', {
-          rules: [{required: true,max:18,min:6, message: '请输入6-8位密码！'}],
+          rules: [{ required: true, max: 18, min: 6, message: '请输入6-8位密码！' }],
         })(<Input.Password placeholder="请输入6-8位密码" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="头像">
         <div>
-          {Item.Avatar?
-            (<img
+          {Item.Avatar ? (
+            <img
               alt="ex"
               className={styles.image}
-              src={`${Config.service}${Item.Avatar}`}
-            />)
-            :null}
+              src={Item.Local ? Item.Avatar : `${Config.service}${Item.Avatar}`}
+            />
+          ) : null}
           <Upload
             name="topicImg"
             multiple={false}
             accept=".jpg,.jpeg"
             className="topic-insertImg"
-            action=""
-            beforeUpload={(file)=>beforeUpload(file)}
+            action={`${Config.service}/api/Admins/getAll`}
+            beforeUpload={file => beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}
           >
@@ -233,15 +239,14 @@ const ManaForm = Form.create()(props => {
   );
 });
 
-
-@connect(({ pageRelate,page, loading }) => ({
+@connect(({ pageRelate, page, loading }) => ({
   pageRelate,
   loading: loading.models.pageRelate,
   relateModalVisible: page.relateModalVisible,
 }))
 @Form.create()
 class RelateForm extends PureComponent {
-  columns1= [
+  columns1 = [
     {
       title: '姓名',
       dataIndex: 'UserName',
@@ -252,8 +257,8 @@ class RelateForm extends PureComponent {
       dataIndex: 'Gender',
       align: 'center',
       render: (text, record) => {
-        return record.Gender === 0?'男':'女'
-      }
+        return record.Gender === 0 ? '男' : '女';
+      },
     },
     {
       title: '出生日期',
@@ -265,17 +270,21 @@ class RelateForm extends PureComponent {
       dataIndex: 'operate',
       key: 'operate',
       align: 'center',
-      render: (text,record)=>(
-        record
-          ? (
-            <Popconfirm title="确认删除?" onConfirm={()=>this.deleteRelate(record)} okText="确认" cancelText="取消">
-              <Button>删除</Button>
-            </Popconfirm>
-          ):null
-      ),
-    }];
+      render: (text, record) =>
+        record ? (
+          <Popconfirm
+            title="确认删除?"
+            onConfirm={() => this.deleteRelate(record)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button>删除</Button>
+          </Popconfirm>
+        ) : null,
+    },
+  ];
 
-  columns2=[
+  columns2 = [
     {
       title: '姓名',
       dataIndex: 'UserName',
@@ -286,8 +295,8 @@ class RelateForm extends PureComponent {
       dataIndex: 'Gender',
       align: 'center',
       render: (text, record) => {
-        return record.Gender === 0?'男':'女'
-      }
+        return record.Gender === 0 ? '男' : '女';
+      },
     },
     {
       title: '出生日期',
@@ -299,89 +308,102 @@ class RelateForm extends PureComponent {
       dataIndex: 'operate',
       key: 'operate',
       align: 'center',
-      render: (text,record)=>(
-        record
-          ? (
-            <Popconfirm title="确认添加?" onConfirm={()=>this.addRelate(record)} okText="确认" cancelText="取消">
-              <Button>添加</Button>
-            </Popconfirm>
-          ):null
-      ),
-    }];
+      render: (text, record) =>
+        record ? (
+          <Popconfirm
+            title="确认添加?"
+            onConfirm={() => this.addRelate(record)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button>添加</Button>
+          </Popconfirm>
+        ) : null,
+    },
+  ];
 
   formLayout = {
     labelCol: { span: 7 },
     wrapperCol: { span: 13 },
   };
 
-  addRelate = ( record ) => {
-    let { pageRelate:{relateItem, restItem},dispatch } = this.props;
+  addRelate = record => {
+    let {
+      pageRelate: { relateItem, restItem },
+      dispatch,
+    } = this.props;
     let relate = relateItem.slice();
     let rest = restItem.slice();
-    let repeat =false;
-    relate.map(data =>{
-      if (data.Id ===record.Id){
-        repeat =true
+    let repeat = false;
+    relate.map(data => {
+      if (data.Id === record.Id) {
+        repeat = true;
       }
     });
-    if (!repeat){
-      relate.push(record)
+    if (!repeat) {
+      relate.push(record);
     } else {
-      message.warning("Already Relate");
-      return
+      message.warning('Already Relate');
+      return;
     }
-    rest = rest.filter(item=>{
-      return item.Id !==record.Id
+    rest = rest.filter(item => {
+      return item.Id !== record.Id;
     });
     dispatch({
       type: 'pageRelate/setStates',
       payload: {
-        restItem:rest,
-        relateItem:relate,
+        restItem: rest,
+        relateItem: relate,
       },
     });
   };
 
-  deleteRelate = ( record ) => {
-    let {pageRelate:{relateItem, restItem},dispatch} = this.props;
+  deleteRelate = record => {
+    let {
+      pageRelate: { relateItem, restItem },
+      dispatch,
+    } = this.props;
     let relate = relateItem.slice();
     let rest = restItem.slice();
 
-    rest.push( record );
+    rest.push(record);
     relate = relate.filter(item => item.Id !== record.Id);
     dispatch({
       type: 'pageRelate/setStates',
       payload: {
-        restItem:rest,
-        relateItem:relate,
+        restItem: rest,
+        relateItem: relate,
       },
     });
   };
 
-  searchItem = (value) => {
+  searchItem = value => {
     const { dispatch } = this.props;
     dispatch({
       type: 'pageRelate/queryItemEff',
       payload: {
-        Key:value,
+        Key: value,
       },
     });
   };
 
   handleRelate = () => {
-    const {  pageRelate:{itemId,relateItem},dispatch } = this.props;
+    const {
+      pageRelate: { itemId, relateItem },
+      dispatch,
+    } = this.props;
     let relateIds = [];
     relateItem.map(item => {
-      relateIds.push(item.Id)
+      relateIds.push(item.Id);
     });
     dispatch({
       type: 'pageRelate/updateRelate',
       payload: {
-        UserId:itemId,
-        RelateIds:relateIds,
+        UserId: itemId,
+        RelateIds: relateIds,
       },
     });
-    this.handleCancel()
+    this.handleCancel();
   };
 
   handleCancel = () => {
@@ -389,46 +411,45 @@ class RelateForm extends PureComponent {
     dispatch({
       type: 'pageRelate/setStates',
       payload: {
-        itemId:"",
-        relateItem:[],
-        restItem:[]
+        itemId: '',
+        relateItem: [],
+        restItem: [],
       },
     });
     dispatch({
       type: 'page/setStates',
       payload: {
-        relateModalVisible:false,
+        relateModalVisible: false,
       },
     });
   };
 
   render() {
-    const { relateModalVisible, pageRelate:{relateItem,restItem} } = this.props;
+    const {
+      relateModalVisible,
+      pageRelate: { relateItem, restItem },
+    } = this.props;
     return (
       <Modal
         centered
         width={1200}
-        title='关联操作'
-        okText='完成'
-        cancelText='取消'
+        title="关联操作"
+        okText="完成"
+        cancelText="取消"
         visible={relateModalVisible}
         destroyOnClose
         onOk={() => this.handleRelate()}
-        onCancel={()=> this.handleCancel()}
+        onCancel={() => this.handleCancel()}
         className={styles.formModal}
-        maskStyle={{backgroundColor:'rgba(0,0,0,.3)'}}
+        maskStyle={{ backgroundColor: 'rgba(0,0,0,.3)' }}
       >
         <Row className="breadcrumb">
           <Col span={12} className="breadcrumb-title">
-            <div className={styles["modal-title"]}>已关联</div>
-            <Table
-              dataSource={relateItem}
-              columns={this.columns1}
-              rowKey={item => item.Id}
-            />
+            <div className={styles['modal-title']}>已关联</div>
+            <Table dataSource={relateItem} columns={this.columns1} rowKey={item => item.Id} />
           </Col>
           <Col span={12} className={styles.breadcrumbTitle}>
-            <div className={styles["modal-title"]}>
+            <div className={styles['modal-title']}>
               <span>未关联</span>
               <Search
                 placeholder="输入名字搜索"
@@ -438,7 +459,7 @@ class RelateForm extends PureComponent {
             </div>
             <Table
               pagination={{
-                onChange: (page) => {
+                onChange: page => {
                   console.log(page);
                 },
                 pageSize: 9,
@@ -454,10 +475,8 @@ class RelateForm extends PureComponent {
   }
 }
 
-
-
 /* eslint react/no-multi-comp:0 */
-@connect(({ page,respondent, loading }) => ({
+@connect(({ page, respondent, loading }) => ({
   page,
   respondent,
   loading: loading.models.page,
@@ -469,16 +488,15 @@ class PageList extends PureComponent {
       title: '姓名',
       dataIndex: 'UserName',
       width: '20%',
-      render:(text,record)=>
-        <a onClick={()=>this.watchInfo(record)}>{text}</a>
+      render: (text, record) => <a onClick={() => this.watchInfo(record)}>{text}</a>,
     },
     {
       title: '性别',
       dataIndex: 'Gender',
       width: '20%',
       render: (text, record) => {
-        return record.Gender === 0?'男':'女'
-      }
+        return record.Gender === 0 ? '男' : '女';
+      },
     },
     {
       title: '出生日期',
@@ -489,39 +507,47 @@ class PageList extends PureComponent {
       title: '操作',
       width: '40%',
       render: (text, record) => {
-        const {page:{dataSource}} = this.props;
-        return dataSource && dataSource.length >= 1
-          ? (
-            <div key={record.Id}>
-              <Button onClick={() => this.handleRelateVisible(true,record)} className={styles.btn}>关联管理</Button>
-              <Button onClick={() => this.handleModalVisible(true,record)} className={styles.btn}>编辑</Button>
-            </div>
-          ) : null
+        const {
+          page: { dataSource },
+        } = this.props;
+        return dataSource && dataSource.length >= 1 ? (
+          <div key={record.Id}>
+            <Button onClick={() => this.handleRelateVisible(true, record)} className={styles.btn}>
+              关联管理
+            </Button>
+            <Button onClick={() => this.handleModalVisible(true, record)} className={styles.btn}>
+              编辑
+            </Button>
+          </div>
+        ) : null;
       },
     },
   ];
 
-  componentDidMount(){
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'page/queryData',
-      payload: "",
+      payload: '',
     });
   }
 
-  watchInfo = (record) => {
+  watchInfo = record => {
     const { dispatch } = this.props;
     dispatch({
       type: 'routerParams/setStates',
       payload: {
-        UserId:record.Id
+        UserId: record.Id,
       },
     });
-    router.push(`/users/mana/userMenu`)
+    router.push(`/users/mana/userMenu`);
   };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch,page:{formValues} } = this.props;
+    const {
+      dispatch,
+      page: { formValues },
+    } = this.props;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
@@ -540,7 +566,7 @@ class PageList extends PureComponent {
 
     dispatch({
       type: 'page/queryPage',
-      payload: {...params},
+      payload: { ...params },
     });
   };
 
@@ -550,7 +576,7 @@ class PageList extends PureComponent {
     dispatch({
       type: 'page/setStates',
       payload: {
-        formValues:{}
+        formValues: {},
       },
     });
     dispatch({
@@ -564,7 +590,7 @@ class PageList extends PureComponent {
     dispatch({
       type: 'page/setStates',
       payload: {
-        selectedRows:rows
+        selectedRows: rows,
       },
     });
   };
@@ -577,54 +603,56 @@ class PageList extends PureComponent {
       dispatch({
         type: 'page/queryData',
         payload: {
-          Key:key
+          Key: key,
         },
       });
     });
   };
 
   handleModalVisible = async (flag, record) => {
-    let newRecord = Object.assign({},record)
+    let newRecord = Object.assign({}, record);
     const { dispatch } = this.props;
     await dispatch({
       type: 'page/setStates',
       payload: {
-        modalVisible:!!flag,
-        Item:record ? newRecord:ClearItem,
+        modalVisible: !!flag,
+        Item: record ? newRecord : ClearItem,
       },
     });
-    if(record){
+    if (record) {
       setInfo.setBaseInfo();
     }
   };
 
   handleDelete = () => {
-    const { dispatch,page:{selectedRows} } = this.props;
+    const {
+      dispatch,
+      page: { selectedRows },
+    } = this.props;
     let Ids = [];
     selectedRows.map(item => {
-      Ids.push(item.Id)
+      Ids.push(item.Id);
     });
     dispatch({
       type: 'page/removeData',
       payload: {
-        Ids:Ids,
+        Ids: Ids,
       },
-      callback:()=>{
+      callback: () => {
         dispatch({
           type: 'page/setStates',
           payload: {
-            selectedRows:[],
+            selectedRows: [],
           },
         });
         dispatch({
           type: 'page/queryData',
           payload: {},
         });
-      }
+      },
     });
     message.success('删除成功');
   };
-
 
   // relate
   handleRelateVisible = (flag, record) => {
@@ -632,28 +660,31 @@ class PageList extends PureComponent {
     dispatch({
       type: 'page/setStates',
       payload: {
-        relateModalVisible:true
+        relateModalVisible: true,
       },
     });
 
     dispatch({
       type: 'pageRelate/changeIdEff',
       payload: record.Id,
-      callback:()=>{
+      callback: () => {
         dispatch({
           type: 'pageRelate/queryRelate',
-          payload:{UserId:record.Id}
+          payload: { UserId: record.Id },
         });
         dispatch({
           type: 'pageRelate/queryRest',
-          payload:{UserId:record.Id}
+          payload: { UserId: record.Id },
         });
-      }
+      },
     });
   };
 
   renderSimpleForm() {
-    const {form: { getFieldDecorator },page:{selectedRows}} = this.props;
+    const {
+      form: { getFieldDecorator },
+      page: { selectedRows },
+    } = this.props;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row type="flex" justify="space-between">
@@ -667,30 +698,36 @@ class PageList extends PureComponent {
               </span>
             )}
           </Col>
-          <span className={styles.submitButtons} style={{alignItems:"flex-end",justifyContent:'flex-end'}}>
+          <span
+            className={styles.submitButtons}
+            style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
+          >
             {getFieldDecorator('key')(
-              <Input placeholder="请输入姓名" style={{ width: 400,marginRight:20 }} />
+              <Input placeholder="请输入姓名" style={{ width: 400, marginRight: 20 }} />
             )}
             <Button type="primary" htmlType="submit">
-                查询
+              查询
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+              重置
             </Button>
           </span>
         </Row>
       </Form>
     );
-  };
+  }
 
   render() {
-    const { page: { showSource,selectedRows,dataSource,pageSize,current }, loading, } = this.props;
-    const data ={
+    const {
+      page: { showSource, selectedRows, dataSource, pageSize, current },
+      loading,
+    } = this.props;
+    const data = {
       list: showSource,
       pagination: {
-        total: dataSource?dataSource.length:0,
-        pageSize:pageSize,
-        current:current
+        total: dataSource ? dataSource.length : 0,
+        pageSize: pageSize,
+        current: current,
       },
     };
     return (
