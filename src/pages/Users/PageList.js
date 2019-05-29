@@ -224,7 +224,7 @@ const ManaForm = Form.create()(props => {
             multiple={false}
             accept=".jpg,.jpeg"
             className="topic-insertImg"
-            action={`${Config.service}/api/Admins/getAll`}
+            action={`${Config.service}/api/Admins/fake`}
             beforeUpload={file => beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}

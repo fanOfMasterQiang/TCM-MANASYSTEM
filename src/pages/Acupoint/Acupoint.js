@@ -160,7 +160,7 @@ const EditModal = props => {
             multiple={false}
             accept=".jpg,.jpeg,.png"
             className={styles.image}
-            action={`${Config.service}/api/Admins/getAll`}
+            action={`${Config.service}/api/Admins/fake`}
             beforeUpload={file => beforeUpload(file)}
             onChange={info => onChange(info)}
             onRemove={() => onRemove()}
